@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = '1.8' // For Java 8
+
+mainClassName = 'events.ch02.HelloCalculator'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.apache.kafka:kafka_2.9.2:0.8.1.1') {
+    	exclude group: 'javax.jms', module: 'jms'
+    	exclude group: 'com.sun.jdmk', module: 'jmxtools'
+    	exclude group: 'com.sun.jmx', module: 'jmxri'
+    }
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    testCompile 'junit:junit:4.11'
+}
