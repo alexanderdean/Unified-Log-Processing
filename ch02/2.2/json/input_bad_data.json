@@ -9,7 +9,7 @@
       "reason": "too few inputs provided (1)" #c
     }
   },
-  "timestamp": "2014-05-05T16:49:17"
+  "timestamp": "2014-05-05T16:49:17Z"
 }
 
 #a Our bad_data object contains the problematic inputs and the reason the calculation couldn't be performed

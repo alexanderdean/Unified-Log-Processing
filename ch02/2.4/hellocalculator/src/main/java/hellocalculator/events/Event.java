@@ -48,7 +48,7 @@ public abstract class Event {
   }
 
   private String getTimestamp() {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ssZ");
     return sdf.format(new Date());
   }
 

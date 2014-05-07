@@ -10,7 +10,7 @@
       "output": 28               #d
     }
   },
-  "timestamp": "2014-05-05T16:47:01"
+  "timestamp": "2014-05-05T16:47:01Z"
 }
 
 #a Assuming each user has their own PC, we can use hostname to uniquely identify the subject
