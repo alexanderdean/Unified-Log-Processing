@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "description": "JSON Schema for our events",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "verb": {
+      "type": "string"
+    },
+    "directObject": {
+      "type": "string",
+      "minProperties": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["subject", "verb", "timestamp"],
+  "additionalProperties": false
+}
