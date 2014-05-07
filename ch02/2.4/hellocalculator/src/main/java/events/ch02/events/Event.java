@@ -13,18 +13,21 @@ public abstract class Event {
   public Event(String hostname, String verb) {
     this.subject = new Subject(hostname);
     this.verb = verb;
-    Date date = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss");
-    this.timestamp = sdf.format(date );
+    this.timestamp = asJsonDatetime(new Date());
   }
 
   public String asJson() {
     return new Gson().toJson(this);
   }
 
+  private String asJsonDatetime(Date dt) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss");
+    return sdf.format(date);
+  }
+
   private class Subject {
     private final String hostname;
-
+    
     public Subject(String hostname) {
       this.hostname = hostname;
     }
