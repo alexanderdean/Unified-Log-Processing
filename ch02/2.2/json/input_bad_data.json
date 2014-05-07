@@ -5,7 +5,7 @@
   "verb": "input",
   "directObject": {
     "badData": {                              #a
-      "inputs": [ "2" ],                      #b
+      "args": [ "2" ],                        #b
       "reason": "too few inputs provided (1)" #c
     }
   },

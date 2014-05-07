@@ -6,7 +6,7 @@
   "directObject": {
     "calculation": {             #c
       "operation": "addition",
-      "inputs": [ 23, 5 ],
+      "args": [ "23", "5" ],
       "output": 28               #d
     }
   },
