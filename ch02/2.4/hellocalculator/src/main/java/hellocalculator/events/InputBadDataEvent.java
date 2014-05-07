@@ -15,15 +15,15 @@ public class InputBadDataEvent extends Event {
     public DirectObject(String[] args, String reason) {
       this.badData = new BadData(args, reason);
     }
-  }
 
-  private class BadData {
-    private final String[] args;
-    private final String reason;
+    private class BadData {
+      private final String[] args;
+      private final String reason;
 
-    public BadData(String[] args, String reason) {
-      this.args = args;
-      this.reason = reason;
+      public BadData(String[] args, String reason) {
+        this.args = args;
+        this.reason = reason;
+      }
     }
   }
 }

@@ -2,6 +2,7 @@ package hellocalculator.events;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.net.InetAddress;
 
 import com.google.gson.Gson;
 
@@ -17,24 +18,30 @@ public abstract class Event {
   private static final String STREAM = "calc_events";
 
   public Event(String hostname, String verb) {
-    this.subject = new Subject(hostname);
+    this.subject = new Subject(getHostname());
     this.verb = verb;
-    this.timestamp = asJsonDatetime(new Date());
+    this.timestamp = getTimestamp();
   }
 
   public void sendTo(Producer<String, String> producer) {
+    String key = this.subject.hostname;
+    String message = new Gson().toJson(this);
     KeyedMessage<String, String> data = new KeyedMessage<String, String>(
-      STREAM, this.subject.hostname, this.toJson());
+      STREAM, key, message);
     producer.send(data);
   }
 
-  private String toJson() {
-    return new Gson().toJson(this);
+  private String getTimestamp() {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss");
+    return sdf.format(new Date());
   }
 
-  private String asJsonDatetime(Date dt) {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ss");
-    return sdf.format(date);
+  private String getHostname() {
+    try {
+      return InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException uhe) {
+      return "unknown";
+    }
   }
 
   private class Subject {
@@ -44,5 +51,4 @@ public abstract class Event {
       this.hostname = hostname;
     }
   }
-
 }

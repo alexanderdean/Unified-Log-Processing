@@ -15,17 +15,17 @@ public class PerformCalculationEvent extends Event {
     public DirectObject(String operation, String[] args, Integer result) {
       this.calculation = new Calculation(operation, args, result);
     }
-  }
 
-  private class Calculation {
-    private final String operation;
-    private final String[] args;
-    private final Integer result;
+    private class Calculation {
+      private final String operation;
+      private final String[] args;
+      private final Integer result;
 
-    public Calculation(String operation, String[] args, Integer result) {
-      this.operation = operation;
-      this.args = args;
-      this.result = result;
+      public Calculation(String operation, String[] args, Integer result) {
+        this.operation = operation;
+        this.args = args;
+        this.result = result;
+      }
     }
   }
 }

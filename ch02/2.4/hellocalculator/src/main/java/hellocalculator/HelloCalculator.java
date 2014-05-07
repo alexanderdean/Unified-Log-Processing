@@ -1,18 +1,12 @@
 package hellocalculator;
 
-// import java.util.List;
 import java.util.Arrays;
 import java.util.Properties;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-
 import kafka.producer.ProducerConfig;
 import kafka.javaapi.producer.Producer;
 
-import events.ch02.events.PerformCalculationEvent;
-import events.ch02.events.InputBadDataEvent;
+import events.PerformCalculationEvent;
+import events.InputBadDataEvent;
 
 public class HelloCalculator {
   
@@ -52,13 +46,5 @@ public class HelloCalculator {
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);
     return new Producer<String, String>(config);
-  }
-
-  static String getHostname() throws IOException, InterruptedException {
-    Process process = Runtime.getRuntime().exec("hostname");
-    process.waitFor();
-    BufferedReader reader = new BufferedReader(new
-      InputStreamReader(process.getInputStream()));
-    return reader.readLine();
   }
 }
