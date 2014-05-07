@@ -26,9 +26,9 @@ public abstract class Event {
     this.timestamp = getTimestamp();
   }
 
-  public static Producer<String, String> createProducer(String brokerList) {
+  public static Producer<String, String> createProducer(String brokers) {
     Properties props = new Properties();
-    props.put("metadata.broker.list", brokerList);
+    props.put("metadata.broker.list", brokers);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);

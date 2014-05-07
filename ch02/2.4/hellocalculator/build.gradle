@@ -9,7 +9,7 @@ repositories {
   mavenCentral()
 }
 
-version = '0.2.0'
+version = '0.2.0' // Bumped version
 
 dependencies {
   compile('org.apache.kafka:kafka_2.9.2:0.8.1.1') {
