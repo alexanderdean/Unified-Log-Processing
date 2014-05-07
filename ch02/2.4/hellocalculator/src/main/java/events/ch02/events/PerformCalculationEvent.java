@@ -1,6 +1,5 @@
 package events.ch02.events;
 
-import java.util.List;
 import com.google.gson.Gson;
 
 public class PerformCalculationEvent extends Event {
