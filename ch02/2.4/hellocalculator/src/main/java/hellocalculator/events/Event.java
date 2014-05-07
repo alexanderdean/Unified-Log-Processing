@@ -1,8 +1,12 @@
-package events.ch02.events;
+package hellocalculator.events;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+
 import com.google.gson.Gson;
+
+import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
 
 public abstract class Event {
 
@@ -10,13 +14,21 @@ public abstract class Event {
   private final String verb;
   private final String timestamp;
 
+  private static final String STREAM = "calc_events";
+
   public Event(String hostname, String verb) {
     this.subject = new Subject(hostname);
     this.verb = verb;
     this.timestamp = asJsonDatetime(new Date());
   }
 
-  public String asJson() {
+  public void sendTo(Producer<String, String> producer) {
+    KeyedMessage<String, String> data = new KeyedMessage<String, String>(
+      STREAM, this.subject.hostname, this.toJson());
+    producer.send(data);
+  }
+
+  private String toJson() {
     return new Gson().toJson(this);
   }
 
@@ -26,10 +38,11 @@ public abstract class Event {
   }
 
   private class Subject {
-    private final String hostname;
+    public final String hostname;
     
     public Subject(String hostname) {
       this.hostname = hostname;
     }
   }
+
 }

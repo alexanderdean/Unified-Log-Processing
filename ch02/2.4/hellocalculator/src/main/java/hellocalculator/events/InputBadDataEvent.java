@@ -1,6 +1,4 @@
-package events.ch02.events;
-
-import com.google.gson.Gson;
+package hellocalculator.events;
 
 public class InputBadDataEvent extends Event {
 
