@@ -4,8 +4,8 @@ public class PerformCalculationEvent extends Event {
 
   private final DirectObject directObject;
 
-  public PerformCalculationEvent(String hostname, String operation, String[] args, Integer result) {
-    super(hostname, "perform");
+  public PerformCalculationEvent(String operation, String[] args, Integer result) {
+    super("perform");
     this.directObject = new DirectObject(operation, args, result);
   }
 

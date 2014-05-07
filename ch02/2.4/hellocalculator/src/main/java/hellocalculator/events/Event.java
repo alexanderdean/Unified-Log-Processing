@@ -2,10 +2,12 @@ package hellocalculator.events;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 import java.net.InetAddress;
 
 import com.google.gson.Gson;
 
+import kafka.producer.ProducerConfig;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 
@@ -17,10 +19,19 @@ public abstract class Event {
 
   private static final String STREAM = "calc_events";
 
-  public Event(String hostname, String verb) {
+  public Event(String verb) {
     this.subject = new Subject(getHostname());
     this.verb = verb;
     this.timestamp = getTimestamp();
+  }
+
+  public static Producer<String, String> createProducer(String brokerList) {
+    Properties props = new Properties();
+    props.put("metadata.broker.list", brokerList);
+    props.put("serializer.class", "kafka.serializer.StringEncoder");
+    props.put("request.required.acks", "1");
+    ProducerConfig config = new ProducerConfig(props);
+    return new Producer<String, String>(config);
   }
 
   public void sendTo(Producer<String, String> producer) {

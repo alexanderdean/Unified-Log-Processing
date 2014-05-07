@@ -4,8 +4,8 @@ public class InputBadDataEvent extends Event {
 
   private final DirectObject directObject;
 
-  public InputBadDataEvent(String hostname, String[] args, String reason) {
-    super(hostname, "input");
+  public InputBadDataEvent(String[] args, String reason) {
+    super("input");
     this.directObject = new DirectObject(args, reason);
   }
 
