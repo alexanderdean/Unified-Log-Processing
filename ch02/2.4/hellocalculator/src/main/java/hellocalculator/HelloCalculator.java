@@ -2,9 +2,11 @@ package hellocalculator;
 
 import java.util.Arrays;
 
-import events.Event;
-import events.PerformCalculationEvent;
-import events.InputBadDataEvent;
+import kafka.javaapi.producer.Producer;
+
+import hellocalculator.events.Event;
+import hellocalculator.events.PerformCalculationEvent;
+import hellocalculator.events.InputBadDataEvent;
 
 public class HelloCalculator {
   

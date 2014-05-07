@@ -4,6 +4,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 
@@ -25,7 +26,7 @@ public abstract class Event {
     this.timestamp = getTimestamp();
   }
 
-  static Producer<String, String> createProducer(String brokerList) {
+  public static Producer<String, String> createProducer(String brokerList) {
     Properties props = new Properties();
     props.put("metadata.broker.list", brokerList);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
@@ -34,7 +35,7 @@ public abstract class Event {
     return new Producer<String, String>(config);
   }
 
-  void sendTo(Producer<String, String> producer) {
+  public void sendTo(Producer<String, String> producer) {
     String key = this.subject.hostname;
     String message = this.asJson();
     KeyedMessage<String, String> data = new KeyedMessage<String, String>(
