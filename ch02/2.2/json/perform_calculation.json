@@ -3,17 +3,17 @@
     "hostname": "bobs.pc"        #a
   },
   "verb": "perform",             #b
-  "object": {
+  "directObject": {
     "calculation": {             #c
       "operation": "addition",
       "inputs": [ 23, 5 ],
       "output": 28               #d
     }
   },
-  "timestamp": "2014-05-05 16:47:01"
+  "timestamp": "2014-05-05T16:47:01"
 }
 
 #a Assuming each user has their own PC, we can use hostname to uniquely identify the subject
 #b We use the third-person present tense for our verbs for simplicity
-#c We are futureproofing our event for supporting other calculations (multiplication, square root etc) in the futureproofing
+#c We are futureproofing our event for supporting other calculations (multiplication, square root etc)
 #d Track the output of our calculation as well, so the event records the full details of what happened
