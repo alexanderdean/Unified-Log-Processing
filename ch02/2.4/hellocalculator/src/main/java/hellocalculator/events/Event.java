@@ -25,7 +25,7 @@ public abstract class Event {
     this.timestamp = getTimestamp();
   }
 
-  public static Producer<String, String> createProducer(String brokerList) {
+  static Producer<String, String> createProducer(String brokerList) {
     Properties props = new Properties();
     props.put("metadata.broker.list", brokerList);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
@@ -34,12 +34,16 @@ public abstract class Event {
     return new Producer<String, String>(config);
   }
 
-  public void sendTo(Producer<String, String> producer) {
+  void sendTo(Producer<String, String> producer) {
     String key = this.subject.hostname;
-    String message = new Gson().toJson(this);
+    String message = this.asJson();
     KeyedMessage<String, String> data = new KeyedMessage<String, String>(
       STREAM, key, message);
     producer.send(data);
+  }
+
+  String asJson() {
+    return new Gson().toJson(this);
   }
 
   private String getTimestamp() {
