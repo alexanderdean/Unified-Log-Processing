@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="events.ch02.HelloCalculatorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2014-05-06T13:49:13" hostname="precise64" time="0.069">
-  <properties/>
-  <testcase name="testSum" classname="events.ch02.HelloCalculatorTest" time="0.069"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
