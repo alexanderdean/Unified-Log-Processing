@@ -8,7 +8,7 @@ import events.InputBadDataEvent;
 
 public class HelloCalculator {
   
-  public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(String[] args) {
 
     Producer<String, String> producer = Event.createProducer("localhost:9092");
 
