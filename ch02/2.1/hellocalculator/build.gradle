@@ -6,29 +6,31 @@ sourceCompatibility = '1.8' // For Java 8
 mainClassName = 'hellocalculator.HelloCalculator'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 version = '0.1.0'
 
 dependencies {
-    compile 'org.slf4j:slf4j-api:1.7.5'
-    testCompile 'junit:junit:4.11'
+  compile 'org.slf4j:slf4j-api:1.7.5'
+  testCompile 'junit:junit:4.11'
 }
 
 jar {
-    from(configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }) {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
+  from(configurations.compile.collect {
+    it.isDirectory() ? it : zipTree(it)
+    }) {
+      exclude "META-INF/*.SF"
+      exclude "META-INF/*.DSA"
+      exclude "META-INF/*.RSA"
     }
 
-    manifest {
-        attributes 'Implementation-Title': 'HelloCalculator',
-                'Implementation-Version': version,
-                'Built-By': System.getProperty('user.name'),
-                'Built-Date': new Date(),
-                'Built-JDK': System.getProperty('java.version'),
-                'Main-Class': mainClassName
-    }
+  manifest {
+    attributes 'Implementation-Title': 'HelloCalculator',
+      'Implementation-Version': version,
+      'Built-By': System.getProperty('user.name'),
+      'Built-Date': new Date(),
+      'Built-JDK': System.getProperty('java.version'),
+      'Main-Class': mainClassName
+  }
 }
