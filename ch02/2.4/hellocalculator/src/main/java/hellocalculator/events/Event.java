@@ -43,7 +43,7 @@ public abstract class Event {
     producer.send(data);
   }
 
-  String asJson() {
+  public String asJson() {
     return new Gson().toJson(this);
   }
 
