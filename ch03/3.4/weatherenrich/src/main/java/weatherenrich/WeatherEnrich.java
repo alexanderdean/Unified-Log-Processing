@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;                                             // Added in 3.4.3
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -12,6 +13,8 @@ import kafka.javaapi.consumer.ConsumerConnector;
 public class WeatherEnrich
 {
   private static final String RAW_STREAM = "calc_events";            // a
+
+  private static final Random prng = new Random();                   // Added in 3.4.3
 
   public static void main(String[] args) {
     
@@ -44,5 +47,9 @@ public class WeatherEnrich
     props.put("auto.commit.interval.ms", "1000");
 
     return new ConsumerConfig(props);
+  }
+
+  private Boolean filter75Pct() {                                    // Added in 3.4.3
+    return (prng.nextInt() % 4 != 0);
   }
 }
