@@ -11,7 +11,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
 
 public class WeatherEnrich
 {
-  private static final String RAW_STREAM = "calc_events";
+  private static final String RAW_STREAM = "calc_events";            // a
 
   public static void main(String[] args) {
     
@@ -27,7 +27,7 @@ public class WeatherEnrich
     KafkaStream<byte[], byte[]> stream =
       consumerMap.get(RAW_STREAM).get(0);
 
-    while (true) {
+    while (true) {                                                   // b
       it = stream.iterator();
       while (it.hasNext()) {
         System.out.println(new String(it.next().message()));
@@ -35,7 +35,7 @@ public class WeatherEnrich
     }
   }
     
-  private static ConsumerConfig createConfig() {
+  private static ConsumerConfig createConfig() {                     // c
     Properties props = new Properties();
     props.put("zookeeper.connect", "127.0.0.1:2181");
     props.put("group.id", "group1");
