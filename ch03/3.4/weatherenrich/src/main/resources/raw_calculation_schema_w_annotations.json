@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "description": "JSON Schema for our enriched calculation events",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "verb": {                    // a
+      "enum": [ "perform" ]
+    },
+    "directObject": {            // b
+      "type": "object",
+      "properties": {
+        "calculation": {
+          "type": "object",
+          "minProperties": 1
+        }
+      },
+      "required": ["calculation"],
+      "additionalProperties": false
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": ["subject", "verb", "timestamp"],
+  "additionalProperties": false
+}

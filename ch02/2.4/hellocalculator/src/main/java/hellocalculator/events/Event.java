@@ -1,6 +1,7 @@
 package hellocalculator.events;
 
 import java.util.Date;
+import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.net.InetAddress;
@@ -49,6 +50,7 @@ public abstract class Event {
 
   private String getTimestamp() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ssZ");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     return sdf.format(new Date());
   }
 

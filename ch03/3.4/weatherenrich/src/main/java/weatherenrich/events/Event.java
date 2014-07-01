@@ -14,13 +14,19 @@ import kafka.producer.KeyedMessage;
 
 public abstract class Event {
 
-  private final Subject subject;
-  private final String verb;
-  private final String timestamp;
+  public final Subject subject;
+  public final String verb;
+  public final String timestamp;
 
   private static final String STREAM = "calc_events";
 
-  protected static final Gson GSON = new Gson(); // TD
+  protected static final Gson GSON = new Gson(); // TODO: update in chapter 2
+
+  public Event() {
+    this.subject = null;
+    this.verb = null;
+    this.timestamp = null;
+  }
 
   public Event(String verb) {
     this.subject = new Subject(getHostname());
@@ -62,9 +68,13 @@ public abstract class Event {
     }
   }
 
-  private class Subject {
+  public static class Subject {
     public final String hostname;
     
+    public Subject() {
+      this.hostname = null;
+    }
+
     public Subject(String hostname) {
       this.hostname = hostname;
     }
