@@ -1,13 +1,14 @@
-package hellocalculator.events;
+package weatherenrich.events;
 
 import java.util.Date;
+import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.gson.Gson;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jackson.JacksonUtils;
 
 import kafka.producer.ProducerConfig;
@@ -20,9 +21,8 @@ public abstract class Event {
   public final String verb;
   public final String timestamp;
 
+  protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
   private static final String STREAM = "calc_events";
-
-  protected static final Gson GSON = new Gson(); // TODO: update in chapter 2
 
   public Event() {
     this.subject = null;
@@ -54,11 +54,16 @@ public abstract class Event {
   }
 
   public String asJson() {
-    return GSON.toJson(this);
+    try {
+      return MAPPER.writeValueAsString(this);
+    } catch (JsonProcessingException pe) {
+      throw new RuntimeException("Problem converting event to JSON", pe);
+    }
   }
 
-  private String getTimestamp() {
+  protected String getTimestamp() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ssZ");
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     return sdf.format(new Date());
   }
 

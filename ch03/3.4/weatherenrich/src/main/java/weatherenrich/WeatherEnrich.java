@@ -10,7 +10,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
 import java.util.Optional;
-import hellocalculator.events.PerformCalculationEvent;
+import weatherenrich.events.PerformCalculationEvent;
 
 public class WeatherEnrich
 {
@@ -55,7 +55,8 @@ public class WeatherEnrich
 
   // Second version
   private static void processEvent2(String raw) {
-    Optional<PerformCalculationEvent> event = PerformCalculationEvent.parse(raw);
+    Optional<PerformCalculationEvent> event =
+      PerformCalculationEvent.parse(raw);
     event.ifPresent(e ->
       System.out.println(e.asJson()));
   }

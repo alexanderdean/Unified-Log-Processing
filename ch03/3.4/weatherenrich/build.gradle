@@ -17,8 +17,7 @@ dependencies {
     exclude group: 'com.sun.jdmk', module: 'jmxtools'
     exclude group: 'com.sun.jmx', module: 'jmxri'
   }
-  compile 'com.google.code.gson:gson:2.2.4'
-  compile 'org.slf4j:slf4j-api:1.7.5'
   compile 'com.github.fge:json-schema-validator:2.2.3'
+  compile 'org.slf4j:slf4j-api:1.7.5'
   testCompile 'junit:junit:4.11'
 }

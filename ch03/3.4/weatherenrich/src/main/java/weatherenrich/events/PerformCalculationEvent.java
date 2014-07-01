@@ -1,8 +1,7 @@
-package hellocalculator.events;
+package weatherenrich.events;                                          // a
 
-import java.io.IOException;                                            // a
+import java.io.IOException;                                            // b
 import java.util.Optional;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.SchemaVersion;
@@ -16,19 +15,19 @@ public class PerformCalculationEvent extends Event {
 
   public final DirectObject directObject;
 
-  private static final ObjectMapper MAPPER = JacksonUtils.newMapper();
-  private static final ValidationConfiguration cfg =                   // b
+  private static final ValidationConfiguration cfg =                   // c
     ValidationConfiguration.newBuilder()
     .setDefaultVersion(SchemaVersion.DRAFTV4).freeze();
-  private static final JsonValidator validator = JsonSchemaFactory.newBuilder()
+  private static final JsonValidator validator =
+    JsonSchemaFactory.newBuilder()
     .setValidationConfiguration(cfg).freeze().getValidator();
   private static final JsonNode schema;
   static {
     try {
-        schema = JsonLoader.fromResource("/raw_calculation_schema.json");
+      schema = JsonLoader.fromResource("/raw_calculation_schema.json");
     }
     catch (IOException e) {
-        throw new RuntimeException("Problem loading enriched schema from resource", e);
+      throw new RuntimeException("Problem loading raw calc schema", e);
     }
   }  
 
@@ -72,21 +71,19 @@ public class PerformCalculationEvent extends Event {
     }
   }
 
-  public static Optional<PerformCalculationEvent> parse(String json) { // c
+  public static Optional<PerformCalculationEvent> parse(String json) { // d
 
     Optional<PerformCalculationEvent> event;
     try {
       JsonNode node = MAPPER.readTree(json);
       ProcessingReport report = validator.validate(schema, node);
-      System.out.println(report.toString());
       event = (report.isSuccess()) 
-        ? event = Optional.of(MAPPER.readValue(json, PerformCalculationEvent.class))
+        ? Optional.of(MAPPER.readValue(json,
+            PerformCalculationEvent.class))
         : Optional.empty();
     } catch (IOException | ProcessingException e) {
-      System.out.println("oh no" + e);
       event = Optional.empty();
     }
     return event;
   }
-
 }
