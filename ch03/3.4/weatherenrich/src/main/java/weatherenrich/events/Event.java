@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 
+import com.github.fge.jackson.JacksonUtils;
+
 import kafka.producer.ProducerConfig;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;

@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
-import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jsonschema.SchemaVersion;
 import com.github.fge.jsonschema.cfg.ValidationConfiguration;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
@@ -17,8 +16,8 @@ public class PerformCalculationEvent extends Event {
 
   public final DirectObject directObject;
 
-  private static final ObjectMapper MAPPER = JacksonUtils.newMapper(); // b
-  private static final ValidationConfiguration cfg =
+  private static final ObjectMapper MAPPER = JacksonUtils.newMapper();
+  private static final ValidationConfiguration cfg =                   // b
     ValidationConfiguration.newBuilder()
     .setDefaultVersion(SchemaVersion.DRAFTV4).freeze();
   private static final JsonValidator validator = JsonSchemaFactory.newBuilder()
