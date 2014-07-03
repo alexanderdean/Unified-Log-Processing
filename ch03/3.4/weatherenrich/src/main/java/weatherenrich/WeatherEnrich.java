@@ -10,7 +10,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
 import java.util.Optional;
-import weatherenrich.events.PerformCalculationEvent;
+import weatherenrich.events.RawEvent;
 
 public class WeatherEnrich
 {
@@ -55,9 +55,8 @@ public class WeatherEnrich
 
   // Second version
   private static void processEvent2(String raw) {
-    Optional<PerformCalculationEvent> event =
-      PerformCalculationEvent.parse(raw);
-    event.ifPresent(e ->
+    Optional<RawEvent> rawEvent = RawEvent.parse(raw);
+    rawEvent.ifPresent(e ->
       System.out.println(e.asJson()));
   }
 }

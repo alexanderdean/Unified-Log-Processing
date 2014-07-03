@@ -11,11 +11,11 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.github.fge.jsonschema.main.JsonValidator;
 
-public class PerformCalculationEvent extends Event {
+public class RawEvent extends Event {                                  // c
 
   public final DirectObject directObject;
 
-  private static final ValidationConfiguration cfg =                   // c
+  private static final ValidationConfiguration cfg =                   // d
     ValidationConfiguration.newBuilder()
     .setDefaultVersion(SchemaVersion.DRAFTV4).freeze();
   private static final JsonValidator validator =
@@ -24,19 +24,19 @@ public class PerformCalculationEvent extends Event {
   private static final JsonNode schema;
   static {
     try {
-      schema = JsonLoader.fromResource("/raw_calculation_schema.json");
+      schema = JsonLoader.fromResource("/raw_event_schema.json");
     }
     catch (IOException e) {
-      throw new RuntimeException("Problem loading raw calc schema", e);
+      throw new RuntimeException("Problem loading raw event's schema", e);
     }
   }  
 
-  public PerformCalculationEvent() {
+  public RawEvent() {                                                  // c
     this.directObject = null;
   };
 
-  public PerformCalculationEvent(String operation,
-    String[] args, Integer result) {
+  public RawEvent(String operation,
+    String[] args, Integer result) {                                   // c
     super("perform");
     this.directObject = new DirectObject(operation, args, result);
   }
@@ -71,9 +71,9 @@ public class PerformCalculationEvent extends Event {
     }
   }
 
-  public static Optional<PerformCalculationEvent> parse(String json) { // d
+  public static Optional<RawEvent> parse(String json) { // e
 
-    Optional<PerformCalculationEvent> event;
+    Optional<RawEvent> event;
     try {
       JsonNode node = MAPPER.readTree(json);
       ProcessingReport report = validator.validate(schema, node);

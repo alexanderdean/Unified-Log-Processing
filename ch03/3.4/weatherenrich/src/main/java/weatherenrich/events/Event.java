@@ -19,7 +19,7 @@ public abstract class Event {
 
   public final Subject subject;
   public final String verb;
-  public final String timestamp;
+  public final Context context;
 
   protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
   private static final String STREAM = "calc_events";
@@ -27,13 +27,13 @@ public abstract class Event {
   public Event() {
     this.subject = null;
     this.verb = null;
-    this.timestamp = null;
+    this.context = null;
   }
 
   public Event(String verb) {
     this.subject = new Subject(getHostname());
     this.verb = verb;
-    this.timestamp = getTimestamp();
+    this.context = new Context(getTimestamp());
   }
 
   public static Producer<String, String> createProducer(String brokers) {
@@ -84,6 +84,18 @@ public abstract class Event {
 
     public Subject(String hostname) {
       this.hostname = hostname;
+    }
+  }
+
+  public static class Context {
+    public final String timestamp;
+
+    public Context() {
+      this.timestamp = null;
+    }
+
+    public Context(String timestamp) {
+      this.timestamp = timestamp;
     }
   }
 }
