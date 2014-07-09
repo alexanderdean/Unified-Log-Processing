@@ -13,7 +13,7 @@ import com.github.fge.jsonschema.main.JsonValidator;
 
 public class RawEvent extends Event {                                  // c
 
-  public final DirectObject directObject;
+  public DirectObject directObject;
 
   private static final ValidationConfiguration cfg =                   // d
     ValidationConfiguration.newBuilder()
@@ -33,7 +33,7 @@ public class RawEvent extends Event {                                  // c
 
   public RawEvent() {                                                  // c
     this.directObject = null;
-  };
+  }
 
   public RawEvent(String operation,
     String[] args, Integer result) {                                   // c
@@ -78,8 +78,7 @@ public class RawEvent extends Event {                                  // c
       JsonNode node = MAPPER.readTree(json);
       ProcessingReport report = validator.validate(schema, node);
       event = (report.isSuccess()) 
-        ? Optional.of(MAPPER.readValue(json,
-            PerformCalculationEvent.class))
+        ? Optional.of(MAPPER.readValue(json, RawEvent.class))
         : Optional.empty();
     } catch (IOException | ProcessingException e) {
       event = Optional.empty();

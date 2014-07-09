@@ -17,9 +17,9 @@ import kafka.producer.KeyedMessage;
 
 public abstract class Event {
 
-  public final Subject subject;
-  public final String verb;
-  public final Context context;
+  public Subject subject;
+  public String verb;
+  public Context context;
 
   protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
   private static final String STREAM = "calc_events";
