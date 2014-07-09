@@ -11,6 +11,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
 
 import java.util.Optional;
 import weatherenrich.events.RawEvent;
+import weatherenrich.events.EnrichedEvent;                           // Added for third version
 
 public class WeatherEnrich
 {
@@ -56,7 +57,17 @@ public class WeatherEnrich
   // Second version
   private static void processEvent2(String raw) {
     Optional<RawEvent> rawEvent = RawEvent.parse(raw);
-    rawEvent.ifPresent(e ->
-      System.out.println(e.asJson()));
+    rawEvent.ifPresent(r ->
+      System.out.println(r.asJson()));
+  }
+
+  // Third version
+  private static void processEvent3(String raw) {
+    Optional<RawEvent> rawEvent = RawEvent.parse(raw);
+    rawEvent.ifPresent(r -> {
+      String[] conditions = {};
+      EnrichedEvent enriched = new EnrichedEvent(r, 20.0d, conditions);
+      System.out.println(enriched.asJson());
+    });
   }
 }
