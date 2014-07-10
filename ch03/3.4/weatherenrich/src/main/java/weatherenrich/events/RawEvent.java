@@ -72,7 +72,6 @@ public class RawEvent extends Event {                                  // c
   }
 
   public static Optional<RawEvent> parse(String json) {                // g
-
     Optional<RawEvent> event;
     try {
       JsonNode node = MAPPER.readTree(json);
@@ -81,6 +80,7 @@ public class RawEvent extends Event {                                  // c
         ? Optional.of(MAPPER.readValue(json, RawEvent.class))
         : Optional.empty();
     } catch (IOException | ProcessingException e) {
+      System.out.println(e);
       event = Optional.empty();
     }
     return event;

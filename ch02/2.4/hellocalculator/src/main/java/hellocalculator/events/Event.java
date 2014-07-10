@@ -7,7 +7,9 @@ import java.util.Properties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.fge.jackson.JacksonUtils;
 
 import kafka.producer.ProducerConfig;
 import kafka.javaapi.producer.Producer;
@@ -15,10 +17,11 @@ import kafka.producer.KeyedMessage;
 
 public abstract class Event {
 
-  private final Subject subject;
-  private final String verb;
-  private final String timestamp;
+  public Subject subject;
+  public String verb;
+  public Context context;
 
+  protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
   private static final String STREAM = "calc_events";
 
   public Event(String verb) {
@@ -45,7 +48,11 @@ public abstract class Event {
   }
 
   public String asJson() {
-    return new Gson().toJson(this);
+    try {
+      return MAPPER.writeValueAsString(this);
+    } catch (JsonProcessingException pe) {
+      throw new RuntimeException("Problem converting event to JSON", pe);
+    }
   }
 
   private String getTimestamp() {

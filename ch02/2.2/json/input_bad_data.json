@@ -4,14 +4,12 @@
   },
   "verb": "input",
   "directObject": {
-    "badData": {                              #a
-      "args": [ "2" ],                        #b
-      "reason": "too few inputs provided (1)" #c
+    "badData": {                                                       #a
+      "args": [ "2" ],                                                 #b
+      "reason": "too few inputs provided (1)"                          #c
     }
   },
-  "timestamp": "2014-05-05T16:49:17Z"
+  "context": {                                                         #d
+    "timestamp": "2014-05-05T16:49:17Z"
+  }
 }
-
-#a Our bad_data object contains the problematic inputs and the reason the calculation couldn't be performed
-#b Let's use an array for the problematic inputs as we don't how many there will be
-#c We fail on the first error encountered, so we only store one error here

@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-sourceCompatibility = '1.8' // For Java 8
+sourceCompatibility = '1.8'                                            // a
 
 mainClassName = 'hellocalculator.HelloCalculator'
 
@@ -9,14 +9,13 @@ repositories {
   mavenCentral()
 }
 
-version = '0.1.0'
+version = '0.1.0'                                                      // b
 
-dependencies {
-  compile 'org.slf4j:slf4j-api:1.7.5'
+dependencies {                                                         // c
   testCompile 'junit:junit:4.11'
 }
 
-jar {
+jar {                                                                  // d
   from(configurations.compile.collect {
     it.isDirectory() ? it : zipTree(it)
     }) {

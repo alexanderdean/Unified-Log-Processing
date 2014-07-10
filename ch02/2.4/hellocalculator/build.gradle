@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-sourceCompatibility = '1.8' // For Java 8
+sourceCompatibility = '1.8'
 
 mainClassName = 'hellocalculator.HelloCalculator'
 
@@ -9,7 +9,7 @@ repositories {
   mavenCentral()
 }
 
-version = '0.2.0' // Bumped version
+version = '0.2.0'
 
 dependencies {
   compile('org.apache.kafka:kafka_2.9.2:0.8.1.1') {
@@ -17,9 +17,6 @@ dependencies {
     exclude group: 'com.sun.jdmk', module: 'jmxtools'
     exclude group: 'com.sun.jmx', module: 'jmxri'
   }
-  compile 'com.google.code.gson:gson:2.2.4'
-  compile 'org.slf4j:slf4j-api:1.7.5'
-  testCompile 'com.github.fge:json-schema-validator:2.2.3'
   testCompile 'junit:junit:4.11'
 }
 
