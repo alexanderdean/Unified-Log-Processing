@@ -31,12 +31,12 @@ public class RawEvent extends Event {                                  // c
     }
   }  
 
-  public RawEvent() {                                                  // c
+  public RawEvent() {                                                  // e
     this.directObject = null;
   }
 
   public RawEvent(String operation,
-    String[] args, Integer result) {                                   // c
+    String[] args, Integer result) {                                   // f
     super("perform");
     this.directObject = new DirectObject(operation, args, result);
   }
@@ -71,7 +71,7 @@ public class RawEvent extends Event {                                  // c
     }
   }
 
-  public static Optional<RawEvent> parse(String json) { // e
+  public static Optional<RawEvent> parse(String json) {                // g
 
     Optional<RawEvent> event;
     try {
