@@ -27,7 +27,7 @@ public abstract class Event {
   public Event(String verb) {
     this.subject = new Subject(getHostname());
     this.verb = verb;
-    this.timestamp = getTimestamp();
+    this.context = new Context(getTimestamp());
   }
 
   public static Producer<String, String> createProducer(String brokers) {
@@ -74,6 +74,18 @@ public abstract class Event {
     
     public Subject(String hostname) {
       this.hostname = hostname;
+    }
+  }
+
+  public static class Context {
+    public final String timestamp;
+
+    public Context() {
+      this.timestamp = null;
+    }
+
+    public Context(String timestamp) {
+      this.timestamp = timestamp;
     }
   }
 }

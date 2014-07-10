@@ -17,6 +17,7 @@ dependencies {
     exclude group: 'com.sun.jdmk', module: 'jmxtools'
     exclude group: 'com.sun.jmx', module: 'jmxri'
   }
+  compile 'com.github.fge:json-schema-validator:2.2.3'
   testCompile 'junit:junit:4.11'
 }
 
