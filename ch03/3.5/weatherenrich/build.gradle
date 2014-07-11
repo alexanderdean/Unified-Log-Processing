@@ -6,7 +6,6 @@ sourceCompatibility = '1.8'
 mainClassName = 'weatherenrich.WeatherEnrich'
 
 repositories {
-  mavenLocal() // TODO: remove in due course
   mavenCentral()
 }
 
