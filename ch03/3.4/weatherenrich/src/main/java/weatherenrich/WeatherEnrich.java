@@ -50,7 +50,7 @@ public class WeatherEnrich
     return new ConsumerConfig(props);
   }
 
-  private static void processEvent(String raw) {                     // c
+  private static void processEvent1(String raw) {                     // c
     System.out.println(raw);
   }
 

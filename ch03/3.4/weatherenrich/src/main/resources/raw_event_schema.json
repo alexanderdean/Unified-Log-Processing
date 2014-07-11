@@ -21,11 +21,18 @@
       "required": ["calculation"],
       "additionalProperties": false
     },
-    "timestamp": {
-      "type": "string",
-      "format": "date-time"
+    "context": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["timestamp"],
+      "additionalProperties": false      
     }
   },
-  "required": ["subject", "verb", "timestamp"],
+  "required": ["subject", "verb", "context"],
   "additionalProperties": false
 }

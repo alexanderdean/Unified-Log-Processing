@@ -2,7 +2,7 @@ package hellocalculator.events;
 
 public class PerformCalculationEvent extends Event {
 
-  private final DirectObject directObject;
+  public final DirectObject directObject;
 
   public PerformCalculationEvent(String operation,
     String[] args, Integer result) {
@@ -10,17 +10,17 @@ public class PerformCalculationEvent extends Event {
     this.directObject = new DirectObject(operation, args, result);
   }
 
-  private class DirectObject {
-    private final Calculation calculation;
+  public static class DirectObject {
+    public final Calculation calculation;
 
     public DirectObject(String operation, String[] args, Integer result) {
       this.calculation = new Calculation(operation, args, result);
     }
 
-    private class Calculation {
-      private final String operation;
-      private final String[] args;
-      private final Integer result;
+    public static class Calculation {
+      public final String operation;
+      public final String[] args;
+      public final Integer result;
 
       public Calculation(String operation, String[] args, Integer result) {
         this.operation = operation;

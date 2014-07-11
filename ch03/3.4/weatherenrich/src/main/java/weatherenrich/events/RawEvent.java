@@ -80,7 +80,6 @@ public class RawEvent extends Event {                                  // c
         ? Optional.of(MAPPER.readValue(json, RawEvent.class))
         : Optional.empty();
     } catch (IOException | ProcessingException e) {
-      System.out.println(e);
       event = Optional.empty();
     }
     return event;

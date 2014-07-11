@@ -55,7 +55,7 @@ public abstract class Event {
     }
   }
 
-  private String getTimestamp() {
+  protected String getTimestamp() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM:ssZ");
     sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
     return sdf.format(new Date());
@@ -69,7 +69,7 @@ public abstract class Event {
     }
   }
 
-  private class Subject {
+  public static class Subject {
     public final String hostname;
     
     public Subject(String hostname) {
@@ -79,10 +79,6 @@ public abstract class Event {
 
   public static class Context {
     public final String timestamp;
-
-    public Context() {
-      this.timestamp = null;
-    }
 
     public Context(String timestamp) {
       this.timestamp = timestamp;
