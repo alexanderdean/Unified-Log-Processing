@@ -34,7 +34,7 @@ public class WeatherEnrich
     while (true) {                                                   // b
       it = stream.iterator();
       while (it.hasNext()) {
-        processEvent2(new String(it.next().message()));
+        processEvent3(new String(it.next().message()));
       }
     }
   }
