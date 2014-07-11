@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "description": "JSON Schema for our enriched calculation events",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "verb": {
+      "enum": ["perform"]
+    },
+    "directObject": {
+      "type": "object",
+      "properties": {
+        "calculation": {
+          "type": "object",
+          "minProperties": 1
+        }
+      },
+      "required": ["directObject"],
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "weather": {
+          "type": "object",
+          "properties": {
+            "temperature": {
+              "type": "number",
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": ["temperature", "conditions"],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  },
+  "required": ["subject", "verb", "timestamp"],
+  "additionalProperties": false
+}
