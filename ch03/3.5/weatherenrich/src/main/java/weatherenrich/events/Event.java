@@ -24,7 +24,7 @@ public abstract class Event {
   protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
   private static final String STREAM = "enriched_events";              // a
 
-  public Event() {                                                     // b
+  public Event() {
     this.subject = null;
     this.verb = null;
     this.context = null;
@@ -90,11 +90,11 @@ public abstract class Event {
   public static class Context {
     public final String timestamp;
 
-    public Context() {                                                 // c
+    public Context() {
       this.timestamp = null;
     }
 
-    public Context(String timestamp) {                                 // d
+    public Context(String timestamp) {
       this.timestamp = timestamp;
     }
   }

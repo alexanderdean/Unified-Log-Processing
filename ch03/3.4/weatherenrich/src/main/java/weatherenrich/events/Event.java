@@ -1,4 +1,4 @@
-package weatherenrich.events;
+package weatherenrich.events;                                          // a
 
 import java.util.Date;
 import java.util.TimeZone;
@@ -22,7 +22,7 @@ public abstract class Event {
   public Context context;
 
   protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
-  private static final String STREAM = "enriched_events";              // a
+  private static final String STREAM = "calc_events";
 
   public Event() {                                                     // b
     this.subject = null;
@@ -78,7 +78,7 @@ public abstract class Event {
   public static class Subject {
     public final String hostname;
     
-    public Subject() {
+    public Subject() {                                                 // c
       this.hostname = null;
     }
 
@@ -90,11 +90,11 @@ public abstract class Event {
   public static class Context {
     public final String timestamp;
 
-    public Context() {                                                 // c
+    public Context() {                                                 // d
       this.timestamp = null;
     }
 
-    public Context(String timestamp) {                                 // d
+    public Context(String timestamp) {
       this.timestamp = timestamp;
     }
   }

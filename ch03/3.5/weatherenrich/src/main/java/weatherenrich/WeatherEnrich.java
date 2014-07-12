@@ -16,12 +16,17 @@ import weatherenrich.events.EnrichedEvent;
 import WeatherAPI.*;                                                   // a
 import java.util.stream.Collectors;
 
+import weatherenrich.events.Event;                                     // b
+import kafka.javaapi.producer.Producer;
+
 public class WeatherEnrich
 {
   private static final String RAW_STREAM = "calc_events";
 
   public static void main(String[] args) {
     
+    Producer<String, String> producer = Event.createProducer("localhost:9092"); // c
+
     ConsumerIterator<byte[], byte[]> it;
 
     ConsumerConnector consumer =
@@ -37,7 +42,7 @@ public class WeatherEnrich
     while (true) {
       it = stream.iterator();
       while (it.hasNext()) {
-        processEvent(new String(it.next().message()));
+        processEvent2(new String(it.next().message()), producer);
       }
     }
   }
@@ -53,17 +58,32 @@ public class WeatherEnrich
     return new ConsumerConfig(props);
   }
 
-  private static void processEvent(String raw) {                       // b
+  private static void processEvent1(String raw) {                      // d
     Optional<RawEvent> rawEvent = RawEvent.parse(raw);
     rawEvent.ifPresent(r -> {
-      IWeather weather = WeatherAPI.getWeather("New%20York%20City", "NY");
+      IWeather weather = WeatherAPI.getWeather("New York City", "NY");
       List<String> conditions = weather.getConditions()
         .stream()
         .map(o -> o.toString())
         .collect(Collectors.toList());
-      double temp = weather.getDegreesCelcius();
+      double temp = weather.getDegreesCelsius();
       EnrichedEvent enriched = new EnrichedEvent(r, temp, conditions);
       System.out.println(enriched.asJson());
+    });
+  }
+
+  private static void processEvent2(String raw, Producer producer) {   // e
+    Optional<RawEvent> rawEvent = RawEvent.parse(raw);
+    rawEvent.ifPresent(r -> {
+      IWeather weather = WeatherAPI.getWeather("New York City", "NY");
+      List<String> conditions = weather.getConditions()
+        .stream()
+        .map(o -> o.toString())
+        .collect(Collectors.toList());
+      double temp = weather.getDegreesCelsius();
+      EnrichedEvent enriched = new EnrichedEvent(r, temp, conditions);
+      System.out.println("<<sending event to Kafka enriched stream>>");  // f
+      enriched.sendTo(producer);
     });
   }
 }
