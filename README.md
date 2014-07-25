@@ -1,4 +1,4 @@
-Big Event Streams
-=================
+Unified Log Processing
+======================
 
-Supporting material (code, schemas etc) for Big Event Streams, authored by Alexander Dean and published by Manning Publications.
+Supporting material (code, schemas etc) for Unified Log Processing, authored by Alexander Dean and published by Manning Publications.
