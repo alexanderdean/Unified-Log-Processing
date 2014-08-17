@@ -11,7 +11,7 @@
       "type": "string"
     },
     "directObject": {
-      "type": "string",
+      "type": "object",
       "minProperties": 1
     },
     "context": {
