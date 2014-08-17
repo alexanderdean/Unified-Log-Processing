@@ -1,5 +1,6 @@
 package weatherenrich;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class WeatherEnrich
   private static void processEvent3(String raw) {
     Optional<RawEvent> rawEvent = RawEvent.parse(raw);
     rawEvent.ifPresent(r -> {
-      String[] conditions = {};
+      List<String> conditions = new ArrayList<String>();
       EnrichedEvent enriched = new EnrichedEvent(r, 20.0d, conditions);
       System.out.println(enriched.asJson());
     });
