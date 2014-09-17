@@ -182,25 +182,6 @@ under the License.
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.rat</groupId>
-          <artifactId>apache-rat-plugin</artifactId>
-          <version>0.9</version>
-          <configuration>
-            <excludes>
-              <exclude>*.json</exclude>
-              <exclude>.vagrant/**</exclude>
-              <exclude>.git/**</exclude>
-              <exclude>*.md</exclude>
-              <exclude>docs/**</exclude>
-              <exclude>config/**</exclude>
-              <exclude>bin/**</exclude>
-              <exclude>.gitignore</exclude>
-              <exclude>**/.cache/**</exclude>
-              <exclude>deploy/**</exclude>
-            </excludes>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -212,19 +193,6 @@ under the License.
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.9</version>
-        <executions>
-          <execution>
-            <phase>test</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
