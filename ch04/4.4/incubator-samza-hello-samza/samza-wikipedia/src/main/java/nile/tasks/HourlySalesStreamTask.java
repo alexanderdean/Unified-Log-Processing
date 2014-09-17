@@ -29,9 +29,9 @@ public class HourlySalesStreamTask
     DateTimeFormat.forPattern("yyyy-MM-dd HH:'00':'00'");
 
   private KeyValueStore<String, Integer> store;
-  private Set<String> hours = new HashSet<String>();                     // a
+  private Set<String> hours = new HashSet<String>();                   // a
 
-  public void init(Config config, TaskContext context) {                 // b
+  public void init(Config config, TaskContext context) {               // b
     this.store = (KeyValueStore<String, Integer>)
       context.getStore("nile-hourlysales");
   }
@@ -39,9 +39,10 @@ public class HourlySalesStreamTask
   @SuppressWarnings("unchecked")
   @Override
   public void process(IncomingMessageEnvelope envelope,
-    MessageCollector collector, TaskCoordinator coordinator) {           // c
+    MessageCollector collector, TaskCoordinator coordinator) {         // c
 
-    Map<String, Object> event = (Map<String, Object>) envelope.getMessage();
+    Map<String, Object> event = (Map<String, Object>)
+      envelope.getMessage();
     String verb = (String) event.get("verb");
     
     if (verb.equals("place")) {
@@ -52,8 +53,9 @@ public class HourlySalesStreamTask
 
       Integer hourlySales = store.get(hourKey);
       if (hourlySales == null) hourlySales = 0;
-      Double orderValue = (Double) ((Map<String, Object>) ((Map<String, Object>)
-        event.get("directObject")).get("order")).get("value") * 100.0;   // d
+      Double orderValue = (Double) ((Map<String, Object>)
+        ((Map<String, Object>) event.get("directObject"))
+        .get("order")).get("value") * 100.0;                           // d
 
       store.put(hourKey, hourlySales + orderValue.intValue());
       hours.add(hourKey);
@@ -62,20 +64,20 @@ public class HourlySalesStreamTask
 
   @Override
   public void window(MessageCollector collector,
-    TaskCoordinator coordinator) {                                       // e
+    TaskCoordinator coordinator) {                                     // e
 
     Map<String, Double> sales = new HashMap<String, Double>();
     for (String hour : hours) {
-      Double hourlySales = store.get(hour) / 100.0;                      // f
+      Double hourlySales = store.get(hour) / 100.0;                    // d
       sales.put(hour, hourlySales);
     }
     collector.send(new OutgoingMessageEnvelope(
       new SystemStream("kafka", "nile-hourlysales-stats"), sales));
 
-    hours.clear();                                                       // g
+    hours.clear();                                                     // f
   }
 
-  private static String asHourKey(String timestamp) {                    // h
+  private static String asHourKey(String timestamp) {                  // g
     try {
       return KEY_DTF.print(EVENT_DTF.parseDateTime(timestamp));
     } catch (IllegalArgumentException iae) {
