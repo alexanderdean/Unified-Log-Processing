@@ -1,21 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 package nile.tasks;
 
 import java.util.Collection;
@@ -55,17 +37,18 @@ public class LookToBookStreamTask
     String verb = (String) event.get("verb");
     
     if (verb.equals("view")) {                                           // a
-      String productSku = (String) ((Map<String, Object>)
-        event.get("directObject")).get("productSku");
-      incrementViews(productSku);
+      String product = (String) ((Map<String, Object>)
+        event.get("directObject")).get("product");
+      incrementViews(product);
 
     } else if (verb.equals("place")) {                                   // b
       Collection<Map<String, Object>> items = (Collection<Map<String, Object>>)
-        ((Map<String, Object>) event.get("directObject")).get("items");
+        ((Map<String, Object>) ((Map<String, Object>)
+        event.get("directObject")).get("order")).get("items");
       for (Map<String, Object> item : items) {
-        String productSku = (String) item.get("productSku");
+        String product = (String) item.get("product");
         Integer quantity = (Integer) item.get("quantity");
-        incrementPurchases(productSku, quantity);
+        incrementPurchases(product, quantity);
       }
     }
   }
@@ -85,12 +68,12 @@ public class LookToBookStreamTask
     }
 
     collector.send(new OutgoingMessageEnvelope(
-      new SystemStream("kafka", "looktobook_stats"), allCounts));
+      new SystemStream("kafka", "nile-looktobook-stats"), allCounts));
 
     products.clear();
   }
 
-  private static String asViewKey(String productSku) {                          // d
+  private static String asViewKey(String productSku) {                   // d
     return productSku + "-views";
   }
 
@@ -107,7 +90,7 @@ public class LookToBookStreamTask
     products.add(productSku);
   }
 
-  private void incrementPurchases(String productSku, Integer quantity) {    // e
+  private void incrementPurchases(String productSku, Integer quantity) { // e
     String purchaseKey = asPurchaseKey(productSku);
     Integer purchasesLifetime = store.get(purchaseKey);
     if (purchasesLifetime == null) purchasesLifetime = 0;

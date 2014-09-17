@@ -1,26 +1,5 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-package nile.tasks;                                                      // a
+package nile.tasks;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,20 +17,11 @@ import org.apache.samza.task.StreamTask;
 import org.apache.samza.task.TaskContext;
 import org.apache.samza.task.TaskCoordinator;
 import org.apache.samza.task.WindowableTask;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import nile.events.AbandonedCartEvent;
+import nile.events.AbandonedCartEvent.DirectObject.Cart;
 
 public class AbandonedCartsStreamTask
   implements StreamTask, InitableTask, WindowableTask {
-
-  private static final int ABANDONED_AFTER_SECS = 2700;
-  private static final DateTimeFormatter EVENT_DTF =
-    DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(DateTimeZone.UTC);
-  protected static final ObjectMapper MAPPER = new ObjectMapper();
 
   private KeyValueStore<String, String> store;
 
@@ -70,19 +40,19 @@ public class AbandonedCartsStreamTask
     String cookieId = (String) ((Map<String, Object>)
       event.get("subject")).get("cookieId");
     
-    if (verb.equals("add")) {                                            // b
+    if (verb.equals("add")) {                                            // a
       String timestamp = (String) ((Map<String, Object>)
         event.get("context")).get("timestamp");
 
-      String oldCart = store.get(asCartKey(cookieId));
       Map<String, Object> item = (Map<String, Object>)
-        event.get("directObject");
-      String updatedCart = updateCart(oldCart, item);
+        ((Map<String, Object>) event.get("directObject")).get("item");
+      Cart cart = new Cart(store.get(asCartKey(cookieId)));
+      cart.addItem(item);
 
       store.put(asTimestampKey(cookieId), timestamp);
-      store.put(asCartKey(cookieId), updatedCart);
+      store.put(asCartKey(cookieId), cart.asJson());
     
-    } else if (verb.equals("place")) {                                   // c
+    } else if (verb.equals("place")) {                                   // b
       resetShopper(cookieId);
     }
   }
@@ -92,14 +62,18 @@ public class AbandonedCartsStreamTask
     TaskCoordinator coordinator) {
 
     KeyValueIterator<String, String> entries = store.all();
-    while (entries.hasNext()) {                                          // d
+    while (entries.hasNext()) {                                          // c
       Entry<String, String> entry = entries.next();
       String key = entry.getKey();
       String value = entry.getValue();
-      if (isTimestampKey(key) && isAbandoned(value)) {
+      if (isTimestampKey(key) && Cart.isAbandoned(value)) {
         String cookieId = extractCookieId(key);
         String cart = store.get(asCartKey(cookieId));
-        sendEvent(collector, cookieId, cart);
+        
+        AbandonedCartEvent event = new AbandonedCartEvent(cookieId, cart);
+        collector.send(new OutgoingMessageEnvelope(
+          new SystemStream("kafka", "nile-derivedevents"), event));
+        
         resetShopper(cookieId);
       }
     }
@@ -125,56 +99,4 @@ public class AbandonedCartsStreamTask
     store.delete(asTimestampKey(cookieId));
     store.delete(asCartKey(cookieId));    
   }
-
-  private boolean isAbandoned(String timestamp) {
-    DateTime ts = EVENT_DTF.parseDateTime(timestamp);
-    DateTime cutoff = new DateTime(DateTimeZone.UTC)
-      .minusSeconds(ABANDONED_AFTER_SECS);
-    return ts.isBefore(cutoff);
-  }
-
-  private String updateCart(String cart, Map<String, Object> item) {     // e
-    try {
-      Collection<Map<String, Object>> items;
-      if (cart == null) {
-        items = new ArrayList<Map<String, Object>>();
-      } else {
-        items = MAPPER.readValue(cart,
-          new TypeReference<Collection<Map<String, Object>>>() {});
-      }
-      items.add(item);
-      return MAPPER.writeValueAsString(items);
-    } catch (IOException iae) {
-      return cart;
-    }
-  }
-
-  private void sendEvent(MessageCollector collector,
-    String cookieId, String cart) {                                      // f
-
-    Map<String, String> subject = new HashMap<String, String>();
-    subject.put("cookieId", cookieId);
-    Map<String, String> context = new HashMap<String, String>();
-    context.put("timestamp", EVENT_DTF.print(new DateTime(DateTimeZone.UTC)));
-    Map<String, Object> directObject = new HashMap<String, Object>();
-
-    Collection<Map<String, Object>> items;
-    try {
-      items = MAPPER.readValue(cart,
-        new TypeReference<Collection<Map<String, Object>>>() {});
-    } catch (IOException iae) {
-      items = new ArrayList<Map<String, Object>>();
-    }
-    directObject.put("items", items);
-
-    Map<String, Object> event = new HashMap<String, Object>();    
-    event.put("subject", subject);
-    event.put("verb", "abandon");
-    event.put("directObject", directObject);
-    event.put("context", context);
-
-    collector.send(new OutgoingMessageEnvelope(
-      new SystemStream("kafka", "derived_events"), event));
-  }
-
 }
