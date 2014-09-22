@@ -20,14 +20,14 @@ import org.apache.samza.task.WindowableTask;
 import nile.events.AbandonedCartEvent;
 import nile.events.AbandonedCartEvent.DirectObject.Cart;
 
-public class AbandonedCartsStreamTask
+public class AbandonedCartStreamTask
   implements StreamTask, InitableTask, WindowableTask {
 
   private KeyValueStore<String, String> store;
 
   public void init(Config config, TaskContext context) {
     this.store = (KeyValueStore<String, String>)
-      context.getStore("nile-abandonedcarts");
+      context.getStore("nile-abandonedcart");
   }
 
   @SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public class AbandonedCartsStreamTask
       String key = entry.getKey();
       String value = entry.getValue();
       if (isTimestampKey(key) && Cart.isAbandoned(value)) {            // d
-        String shopper = extractCookieId(key);
+        String shopper = extractShopper(key);
         String cart = store.get(asCartKey(shopper));
         
         AbandonedCartEvent event =
@@ -102,3 +102,4 @@ public class AbandonedCartsStreamTask
     store.delete(asCartKey(shopper));
   }
 }
+
