@@ -35,25 +35,26 @@ public class AbandonedCartsStreamTask
   public void process(IncomingMessageEnvelope envelope,
     MessageCollector collector, TaskCoordinator coordinator) {
 
-    Map<String, Object> event = (Map<String, Object>) envelope.getMessage();
+    Map<String, Object> event =
+      (Map<String, Object>) envelope.getMessage();
     String verb = (String) event.get("verb");
-    String cookieId = (String) ((Map<String, Object>)
-      event.get("subject")).get("cookieId");
+    String shopper = (String) ((Map<String, Object>)
+      event.get("subject")).get("shopper");
     
-    if (verb.equals("add")) {                                            // a
+    if (verb.equals("add")) {                                          // a
       String timestamp = (String) ((Map<String, Object>)
         event.get("context")).get("timestamp");
 
       Map<String, Object> item = (Map<String, Object>)
         ((Map<String, Object>) event.get("directObject")).get("item");
-      Cart cart = new Cart(store.get(asCartKey(cookieId)));
+      Cart cart = new Cart(store.get(asCartKey(shopper)));
       cart.addItem(item);
 
-      store.put(asTimestampKey(cookieId), timestamp);
-      store.put(asCartKey(cookieId), cart.asJson());
+      store.put(asTimestampKey(shopper), timestamp);
+      store.put(asCartKey(shopper), cart.asJson());
     
-    } else if (verb.equals("place")) {                                   // b
-      resetShopper(cookieId);
+    } else if (verb.equals("place")) {                                 // b
+      resetShopper(shopper);
     }
   }
 
@@ -62,41 +63,42 @@ public class AbandonedCartsStreamTask
     TaskCoordinator coordinator) {
 
     KeyValueIterator<String, String> entries = store.all();
-    while (entries.hasNext()) {                                          // c
+    while (entries.hasNext()) {                                        // c
       Entry<String, String> entry = entries.next();
       String key = entry.getKey();
       String value = entry.getValue();
-      if (isTimestampKey(key) && Cart.isAbandoned(value)) {
-        String cookieId = extractCookieId(key);
-        String cart = store.get(asCartKey(cookieId));
+      if (isTimestampKey(key) && Cart.isAbandoned(value)) {            // d
+        String shopper = extractCookieId(key);
+        String cart = store.get(asCartKey(shopper));
         
-        AbandonedCartEvent event = new AbandonedCartEvent(cookieId, cart);
+        AbandonedCartEvent event =
+          new AbandonedCartEvent(shopper, cart);
         collector.send(new OutgoingMessageEnvelope(
-          new SystemStream("kafka", "nile-derivedevents"), event));
+          new SystemStream("kafka", "nile-derivedevents"), event));    // e
         
-        resetShopper(cookieId);
+        resetShopper(shopper);
       }
     }
   }
 
-  private static String asTimestampKey(String cookieId) {
-    return cookieId + "-ts";
+  private static String asTimestampKey(String shopper) {
+    return shopper + "-ts";
   }
 
   private static boolean isTimestampKey(String key) {
     return key.endsWith("-ts");
   }
 
-  private static String extractCookieId(String key) {
+  private static String extractShopper(String key) {                   // f
     return key.substring(0, key.lastIndexOf('-'));
   }
 
-  private static String asCartKey(String cookieId) {
-    return cookieId + "-cart";
+  private static String asCartKey(String shopper) {
+    return shopper + "-cart";
   }
 
-  private void resetShopper(String cookieId) {
-    store.delete(asTimestampKey(cookieId));
-    store.delete(asCartKey(cookieId));    
+  private void resetShopper(String shopper) {
+    store.delete(asTimestampKey(shopper));
+    store.delete(asCartKey(shopper));
   }
 }
