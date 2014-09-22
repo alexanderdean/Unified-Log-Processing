@@ -47,7 +47,7 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>${basedir}/src/main/config/nile-abandonedcarts.properties</source>
+      <source>${basedir}/src/main/config/nile-abandonedcart.properties</source>
       <outputDirectory>config</outputDirectory>
       <filtered>true</filtered>
     </file>
