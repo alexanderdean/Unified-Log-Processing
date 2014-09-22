@@ -33,16 +33,18 @@ public class LookToBookStreamTask
   public void process(IncomingMessageEnvelope envelope,
     MessageCollector collector, TaskCoordinator coordinator) {
 
-    Map<String, Object> event = (Map<String, Object>) envelope.getMessage();
+    Map<String, Object> event =
+      (Map<String, Object>) envelope.getMessage();
     String verb = (String) event.get("verb");
     
-    if (verb.equals("view")) {                                           // a
+    if (verb.equals("view")) {                                         // a
       String product = (String) ((Map<String, Object>)
         event.get("directObject")).get("product");
       incrementViews(product);
 
-    } else if (verb.equals("place")) {                                   // b
-      Collection<Map<String, Object>> items = (Collection<Map<String, Object>>)
+    } else if (verb.equals("place")) {                                 // b
+      Collection<Map<String, Object>> items =
+        (Collection<Map<String, Object>>)
         ((Map<String, Object>) ((Map<String, Object>)
         event.get("directObject")).get("order")).get("items");
       for (Map<String, Object> item : items) {
@@ -60,7 +62,7 @@ public class LookToBookStreamTask
     Map<String, HashMap<String, Integer>> allCounts =
       new HashMap<String, HashMap<String, Integer>>();
 
-    for (String product : products) {                                    // c
+    for (String product : products) {                                  // c
       HashMap<String, Integer> counts = new HashMap<String, Integer>();
       counts.put("views", store.get(asViewKey(product)));
       counts.put("purchases", store.get(asPurchaseKey(product)));
@@ -73,29 +75,31 @@ public class LookToBookStreamTask
     products.clear();
   }
 
-  private static String asViewKey(String productSku) {                   // d
-    return productSku + "-views";
+  private static String asViewKey(String product) {                    // d
+    return product + "-views";
   }
 
-  private static String asPurchaseKey(String productSku) {
-    return productSku + "-purchases";
+  private static String asPurchaseKey(String product) {                // e
+    return product + "-purchases";
   }
 
-  private void incrementViews(String productSku) {                       // e
-    String viewKey = asViewKey(productSku);
+  private void incrementViews(String product) {                        // f
+    String viewKey = asViewKey(product);
     Integer viewsLifetime = store.get(viewKey);
     if (viewsLifetime == null) viewsLifetime = 0;
     
     store.put(viewKey, viewsLifetime + 1);
-    products.add(productSku);
+    products.add(product);
   }
 
-  private void incrementPurchases(String productSku, Integer quantity) { // e
-    String purchaseKey = asPurchaseKey(productSku);
+  private void incrementPurchases(String product,
+    Integer quantity) {                                                // g
+
+    String purchaseKey = asPurchaseKey(product);
     Integer purchasesLifetime = store.get(purchaseKey);
     if (purchasesLifetime == null) purchasesLifetime = 0;
     
     store.put(purchaseKey, purchasesLifetime + quantity);
-    products.add(productSku);
+    products.add(product);
   }
 }
