@@ -1,0 +1,4 @@
+To get started:
+vagrant ssh
+cd /vagrant/ch02/2.1/hellocalculator
+gradle test
