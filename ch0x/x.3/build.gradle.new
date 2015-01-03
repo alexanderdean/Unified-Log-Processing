@@ -1,0 +1,36 @@
+apply plugin: 'scala'                                                  // a
+apply plugin: 'application'
+
+mainClassName = 'currency.CurrencyConverter'
+
+repositories {
+  mavenCentral()
+}
+
+version = '0.1.0'
+
+dependencies {                                                         // b
+  compile 'org.scala-lang:scala-library:2.11.4'
+  compile 'org.scalaz:scalaz-core:7.1.0'
+  testCompile 'org.specs2:specs2-core:3.0-M0'
+  testCompile 'org.typelevel:scalaz-specs2:0.3.0'
+}
+
+jar {                                                                  // c
+  from(configurations.compile.collect {
+    it.isDirectory() ? it : zipTree(it)
+    }) {
+      exclude "META-INF/*.SF"
+      exclude "META-INF/*.DSA"
+      exclude "META-INF/*.RSA"
+    }
+
+  manifest {
+    attributes 'Implementation-Title': 'CurrencyConverter',
+      'Implementation-Version': version,
+      'Built-By': System.getProperty('user.name'),
+      'Built-Date': new Date(),
+      'Built-JDK': System.getProperty('java.version'),
+      'Main-Class': mainClassName
+  }
+}

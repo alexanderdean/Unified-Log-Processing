@@ -1,0 +1,17 @@
+apply plugin: 'scala'                                              // a
+
+repositories {
+  mavenCentral()
+  maven {                                                          // b
+    url 'http://oss.sonatype.org/content/repositories/releases'
+  }
+}
+
+version = '0.1.0'
+
+dependencies {                                                     // c
+  compile 'org.scala-lang:scala-library:2.11.4'
+  compile 'org.scalaz:scalaz-core_2.11:7.1.0'
+  testCompile 'org.specs2:specs2_2.11:2.4'
+  testCompile 'org.typelevel:scalaz-specs2_2.11:0.3.0'
+}
