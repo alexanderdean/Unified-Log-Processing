@@ -2,7 +2,7 @@ package forex;
 
 import java.util.Locale;
 
-public class CurrencyConverter {
+public class CurrencyValidator {
   public enum Currency {USD, GPB, EUR}                             // a
 
   public static class UnsupportedCurrencyException

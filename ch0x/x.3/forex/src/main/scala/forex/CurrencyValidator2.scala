@@ -3,14 +3,7 @@ package forex
 import scalaz._                                                    // a
 import Scalaz._                                                    // a
 
-object CurrencyConverter2 {
-
-  object Currency extends Enumeration {
-    type Currency = Value
-    val Usd = Value("USD")
-    val Gbp = Value("GBP")
-    val Eur = Value("EUR")
-  }
+object CurrencyValidator2 {
 
   def validateCurrency(raw: String):
     Validation[String, Currency.Value] = {                         // b
