@@ -9,7 +9,12 @@ repositories {
 
 version = '0.1.0'
 
-dependencies {                                                     // c
+tasks.withType(ScalaCompile) {                                     // c
+  scalaCompileOptions.useAnt = false
+}
+
+dependencies {                                                     // d
+  runtime "org.scala-lang:scala-compiler:2.11.4"
   compile 'org.scala-lang:scala-library:2.11.4'
   compile 'org.scalaz:scalaz-core_2.11:7.1.0'
   testCompile 'org.specs2:specs2_2.11:2.4'

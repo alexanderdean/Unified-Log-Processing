@@ -8,7 +8,7 @@ public class CurrencyConverter {
   public static class UnsupportedCurrencyException
     extends Exception {                                            // b
     public UnsupportedCurrencyException(String raw) {
-      super("Currency must be USD, EUR or GBP, not " + raw);
+      super("Currency must be USD/EUR/GBP, not " + raw);
     }
   }
 
