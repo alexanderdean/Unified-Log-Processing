@@ -7,15 +7,15 @@ import Scalaz._
 
 object ExchangeRateLookup {
 
-  def lookupRate(currency: Currency.Value):
+  def lookup(currency: Currency.Value):
     Validation[String, Double] = {                                 // a
 
     currency match {
-      case Currency.Eur     => 1D.success
-      case _ if isUnlucky() => "Network error".fail                // b
-      case Currency.Usd     => 0.85D.success                       // c
+      case Currency.Eur     => 1D.success                          // b
+      case _ if isUnlucky() => "Network error".failure             // c
+      case Currency.Usd     => 0.85D.success
       case Currency.Gbp     => 1.29D.success
-      case _                => "Unsupported currency".fail         // d
+      case _                => "Unsupported currency".failure      // d
     }
   }
 
