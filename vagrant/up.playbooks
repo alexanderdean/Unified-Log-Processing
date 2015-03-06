@@ -2,3 +2,4 @@ oss-playbooks/java8.yml
 oss-playbooks/gradle.yml
 oss-playbooks/thrift.yml
 oss-playbooks/scala.yml
+oss-playbooks/aws-cli-and-psql.yml
