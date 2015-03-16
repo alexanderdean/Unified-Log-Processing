@@ -59,4 +59,4 @@ if __name__ == '__main__':                                        # a
   while True:                                                     # b
     write_event(conn, "events")
     print "Wrote event"
-    time.sleep(60)                                                # c
+    time.sleep(10)                                                # c
