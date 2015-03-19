@@ -52,11 +52,12 @@ def write_event(conn, stream_name):
   event_id, event_payload = create_event()
   event_json = json.dumps(event_payload)
   conn.put_record(stream_name, event_json, event_id)
+  return event_id
 
 if __name__ == '__main__':                                        # a
   conn = kinesis.connect_to_region(region_name="eu-west-1",
     profile_name="ulp")
   while True:                                                     # b
-    write_event(conn, "events")
-    print "Wrote event"
+    event_id = write_event(conn, "events")
+    print "Wrote event: {}".format(event_id)
     time.sleep(10)                                                # c
