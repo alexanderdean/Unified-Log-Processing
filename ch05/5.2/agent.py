@@ -55,7 +55,7 @@ def write_event(conn, stream_name):
   return event_id
 
 if __name__ == '__main__':                                        # a
-  conn = kinesis.connect_to_region(region_name="eu-west-1",
+  conn = kinesis.connect_to_region(region_name="us-east-1",
     profile_name="ulp")
   while True:                                                     # b
     event_id = write_event(conn, "events")
