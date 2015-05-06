@@ -31,7 +31,8 @@ class ShardReader(Thread):
       while True:
         response = conn.get_records(next_iterator, limit=10)
         for event in response['Records']:
-          print '{} read event {}'.format(self.name, event['PartitionKey'])
+          print '{} read event {}'.format(self.name,
+            event['PartitionKey'])
           s, a = self.detect_incident(event['Data'])              # a
           if a:
             print '{} has only {}% disk available!'.format(s, a)  # b
