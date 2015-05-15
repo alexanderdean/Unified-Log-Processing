@@ -29,10 +29,7 @@ object SparkExampleProjectBuild extends Build {
     .settings(
       libraryDependencies ++= Seq(
         Libraries.sparkCore,
-        Libraries.sparkMllib,
-        Libraries.sparkSql,
-        Libraries.guava,
-        Libraries.specs2
+        Libraries.sparkSql
         // Add your additional libraries here (comma-separated)...
       )
     )
