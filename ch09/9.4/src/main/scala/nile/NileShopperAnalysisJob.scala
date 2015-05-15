@@ -1,15 +1,12 @@
 package nile
 
-// Spark
 import org.apache.spark.{SparkContext, SparkConf}
 import SparkContext._
 import org.apache.spark.sql._
 import functions._
-
-// Hadoop
 import org.apache.hadoop.io.BytesWritable
 
-object NileShopperAnalysisJob {
+object ShopperAnalysisJob {
 
   def main(args: Array[String]) {
 
@@ -19,7 +16,7 @@ object NileShopperAnalysisJob {
     }
 
     val sparkConf = new SparkConf()
-      .setAppName("NileShopperAnalysis")
+      .setAppName("ShopperAnalysis")
       .setJars(List(SparkContext.jarOfObject(this).get))           // b
     val sparkContext = new SparkContext(sparkConf)
 
