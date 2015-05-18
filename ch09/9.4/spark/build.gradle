@@ -23,14 +23,14 @@ dependencies {
   runtime "org.apache.spark:spark-core_2.11:1.3.0"
   runtime "org.apache.spark:spark-sql_2.11:1.3.0"
   compile 'org.scala-lang:scala-library:2.11.4'
-  provided 'org.apache.spark:spark-core_2.11:1.3.0'                // c
+  provided 'org.apache.spark:spark-core_2.11:1.3.0'                // b
   provided 'org.apache.spark:spark-sql_2.11:1.3.0'
 }
 
 jar {
   dependsOn configurations.runtime
   from {
-    (configurations.runtime - configurations.provided).collect {
+    (configurations.runtime - configurations.provided).collect {   // c
       it.isDirectory() ? it : zipTree(it)
     }
   } {

@@ -30,7 +30,7 @@ object ShopperAnalysisJob {
 
     val (shopper, item, order) =
       ("subject.shopper", "directObject.item", "directObject.order")
-    events
+    val analysis = events
       .filter(s"${shopper} is not null")
       .groupBy(shopper)
       .agg(
@@ -41,7 +41,7 @@ object ShopperAnalysisJob {
         sum(s"${order}.value")
       )
 
-    events.rdd.saveAsTextFile(outFolder)                           // c
+    analysis.rdd.saveAsTextFile(outFolder)                         // c
   }
 
   private def toJson(bytes: BytesWritable): String =               // d
