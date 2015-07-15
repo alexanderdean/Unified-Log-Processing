@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "properties": {
+    "event": {
+      "enum": [ "TRUCK_ARRIVES" ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "vehicle": {
+      "type": "object",
+      "properties": {
+        "vin": {
+          "type": "string"
+        },
+        "odometer": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      },
+      "additionalProperties": false
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "longitude": {
+          "type": "number"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "elevation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32767
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
