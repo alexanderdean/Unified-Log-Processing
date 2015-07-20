@@ -12,9 +12,11 @@
       "type": "object",
       "properties": {
         "vin": {
-          "type": "string"
+          "type": "string",
+          "minLength": 17,
+          "maxLength": 17
         },
-        "odometer": {
+        "mileage": {
           "type": "integer",
           "minimum": 0,
           "maximum": 2147483647
