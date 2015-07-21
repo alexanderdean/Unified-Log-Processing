@@ -12,7 +12,9 @@
       "type": "object",
       "properties": {
         "vin": {
-          "type": "string"
+          "type": "string",
+          "minLength": 17,
+          "maxLength": 17
         },
         "odometer": {
           "type": "integer",

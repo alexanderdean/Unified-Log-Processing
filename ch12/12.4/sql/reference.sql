@@ -20,16 +20,6 @@ INSERT INTO employees
   ("54997a47-252d-499f-a54e-1522ac49fa48", "Carlos", "1985-10-27"),
   ("c4b843f2-0ef6-4666-8f8d-91ac2e366571", "Andreas", "1994-03-13");
 
-CREATE TABLE customers(
-  id CHAR(36) NOT NULL,
-  name VARCHAR(32) NOT NULL,
-  zip_code VARCHAR(10) NOT NULL,
-  FOREIGN KEY(id) REFERENCES events("customer.id"));
-INSERT INTO customers
-  ("b39a2b30-049b-436a-a45d-46d290df65d3", "Karl", "99501"),
-  ("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7", "Maria", "72217-2517"),
-  ("b1e5d874-963b-4992-a232-4679438261ab", "Amit", "90089");
-
 CREATE TABLE packages(
   id CHAR(36) NOT NULL,
   weight INT NOT NULL,
@@ -40,3 +30,13 @@ INSERT INTO packages
   ("14a714cf-5a89-417e-9c00-f2dba0d1844d", 894),
   ("834bc3e0-595f-4a6f-a827-5580f3d346f7", 3200),
   ("79fee326-aaeb-4cc6-aa4f-f2f98f443271", 2367);
+
+CREATE TABLE customers(
+  id CHAR(36) NOT NULL,
+  name VARCHAR(32) NOT NULL,
+  zip VARCHAR(10) NOT NULL,
+  FOREIGN KEY(id) REFERENCES events("customer.id"));
+INSERT INTO customers
+  ("b39a2b30-049b-436a-a45d-46d290df65d3", "Karl", "99501"),
+  ("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7", "Maria", "72217-2517"),
+  ("b1e5d874-963b-4992-a232-4679438261ab", "Amit", "90089");
