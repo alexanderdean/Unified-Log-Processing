@@ -16,12 +16,13 @@
           "minLength": 17,
           "maxLength": 17
         },
-        "odometer": {
+        "mileage": {
           "type": "integer",
           "minimum": 0,
           "maximum": 2147483647
         }
       },
+      "required": [ "vin", "mileage" ],
       "additionalProperties": false
     },
     "location": {
@@ -39,9 +40,10 @@
           "maximum": 32767
         }
       },
+      "required": [ "longitude", "latitude", "elevation" ],
       "additionalProperties": false
     }
   },
+  "required": [ "event", "timestamp", "vehicle", "location" ],
   "additionalProperties": false
 }
-

@@ -5,7 +5,7 @@
     "$.timestamp",
 
     "$.vehicle.vin",
-    "$.vehicle.odometer",
+    "$.vehicle.mileage",
 
     "$.location.longitude",
     "$.location.latitude",

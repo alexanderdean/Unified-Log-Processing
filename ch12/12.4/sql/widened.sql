@@ -3,6 +3,7 @@ CREATE VIEW widened AS
     ev.event         AS event,
     ev.timestamp     AS timestamp,
     "ev.vehicle.vin" AS "vehicle.vin",
+    "ev.vehicle.mileage"    AS "vehicle.mileage",
     "v.make"         AS "vehicle.make",
     "v.model"        AS "vehicle.model",
     "v.year"         AS "vehicle.year",
@@ -10,13 +11,15 @@ CREATE VIEW widened AS
     "ev.location.latitude"  AS "location.latitude",
     "ev.location.elevation" AS "location.elevation",
     "ev.employee.id" AS "employee.id",
+    "ev.employee.job_role"  AS "employee.job_role",
     "e.name"         AS "employee.name",
     "e.dob"          AS "employee.dob",
     "ev.package.id"  AS "package.id",
     "p.weight"       AS "package.weight",
     "ev.customer.id" AS "customer.id",
+    "ev.customer.is_vip"    AS "customer.is_vip",
     "c.name"         AS "customer.name",
-    "c.zip"          AS "customer.zip"
+    "c.zip_code"     AS "customer.zip"
   FROM events ev
     LEFT JOIN vehicles v  ON ev.vehicle.vin = v.vin
     LEFT JOIN employees e ON ev.employee.id = e.id

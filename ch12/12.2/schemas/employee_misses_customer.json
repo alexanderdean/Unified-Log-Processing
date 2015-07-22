@@ -2,29 +2,27 @@
   "type": "object",
   "properties": {
     "event": {
-      "enum": [ "TRUCK_ARRIVES" ]
+      "enum": [ "EMPLOYEE_MISSES_CUSTOMER" ]
     },
     "timestamp": {
       "type": "string",
       "format": "date-time"
     },
-    "vehicle": {
+    "employee": {
       "type": "object",
       "properties": {
-        "vin": {
+        "id": {
           "type": "string",
-          "minLength": 17,
-          "maxLength": 17
+          "format": "uuid"
         },
-        "mileage": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 2147483647
+        "jobRole": {
+          "enum": [ "JNR_DRIVER", "SNR_DRIVER" ]
         }
       },
-      "required": [ "vin", "mileage" ],
       "additionalProperties": false
     },
+
+
     "location": {
       "type": "object",
       "properties": {
@@ -40,10 +38,9 @@
           "maximum": 32767
         }
       },
-      "required": [ "longitude", "latitude", "elevation" ],
       "additionalProperties": false
     }
   },
-  "required": [ "event", "timestamp", "vehicle", "location" ],
+  "required": [ "event", "timestamp", "employee", "package", "customer", "location" ],
   "additionalProperties": false
 }
