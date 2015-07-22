@@ -19,7 +19,7 @@ CREATE VIEW widened AS
     "ev.customer.id" AS "customer.id",
     "ev.customer.is_vip"    AS "customer.is_vip",
     "c.name"         AS "customer.name",
-    "c.zip_code"     AS "customer.zip"
+    "c.zip_code"     AS "customer.zip_code"
   FROM events ev
     LEFT JOIN vehicles v  ON ev.vehicle.vin = v.vin
     LEFT JOIN employees e ON ev.employee.id = e.id

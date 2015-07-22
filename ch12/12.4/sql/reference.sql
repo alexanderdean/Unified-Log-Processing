@@ -34,7 +34,7 @@ INSERT INTO packages
 CREATE TABLE customers(
   id CHAR(36) NOT NULL,
   name VARCHAR(32) NOT NULL,
-  zip VARCHAR(10) NOT NULL,
+  zip_code VARCHAR(10) NOT NULL,
   FOREIGN KEY(id) REFERENCES events("customer.id"));
 INSERT INTO customers
   ("b39a2b30-049b-436a-a45d-46d290df65d3", "Karl", "99501"),
