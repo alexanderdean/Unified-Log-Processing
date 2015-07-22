@@ -8,6 +8,23 @@
       "type": "string",
       "format": "date-time"
     },
+    "location": {
+      "type": "object",
+      "properties": {
+        "longitude": {
+          "type": "number"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "elevation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32767
+        }
+      },
+      "additionalProperties": false
+    },
     "employee": {
       "type": "object",
       "properties": {
@@ -44,23 +61,6 @@
         }
       },
       "required": [ "id", "isVip" ],
-      "additionalProperties": false
-    },
-    "location": {
-      "type": "object",
-      "properties": {
-        "longitude": {
-          "type": "number"
-        },
-        "latitude": {
-          "type": "number"
-        },
-        "elevation": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 32767
-        }
-      },
       "additionalProperties": false
     }
   },
