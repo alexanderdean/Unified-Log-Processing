@@ -21,8 +21,31 @@
       },
       "additionalProperties": false
     },
-
-
+    "package": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [ "id" ],
+      "additionalProperties": false
+    },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isVip": {
+          "type": "boolean"
+        }
+      },
+      "required": [ "id", "isVip" ],
+      "additionalProperties": false
+    },
     "location": {
       "type": "object",
       "properties": {
