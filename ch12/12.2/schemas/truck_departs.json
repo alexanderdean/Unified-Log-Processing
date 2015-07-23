@@ -28,15 +28,15 @@
     "location": {
       "type": "object",
       "properties": {
-        "longitude": {
+        "latitude": {
           "type": "number"
         },
-        "latitude": {
+        "longitude": {
           "type": "number"
         },
         "elevation": {
           "type": "integer",
-          "minimum": 0,
+          "minimum": -32768,
           "maximum": 32767
         }
       },

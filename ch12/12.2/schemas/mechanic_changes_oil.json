@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "event": {
-      "enum": [ "EMPLOYEE_CHANGES_OIL" ]
+      "enum": [ "MECHANIC_CHANGES_OIL" ]
     },
     "timestamp": {
       "type": "string",
@@ -16,7 +16,7 @@
           "format": "uuid"
         },
         "jobRole": {
-          "enum": [ "JNR_MECH", "SNR_MECH" ]
+          "enum": [ "JNR_MECHANIC", "SNR_MECHANIC" ]
         }
       },
       "additionalProperties": false
@@ -31,7 +31,7 @@
         },
         "mileage": {
           "type": "integer",
-          "minimum": 0,
+          "minimum": -32768,
           "maximum": 2147483647
         }
       },
