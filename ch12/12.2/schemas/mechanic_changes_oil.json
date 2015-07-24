@@ -19,6 +19,7 @@
           "enum": [ "JNR_MECHANIC", "SNR_MECHANIC" ]
         }
       },
+      "required": [ "id", "jobRole" ],
       "additionalProperties": false
     },
     "vehicle": {
@@ -35,6 +36,7 @@
           "maximum": 2147483647
         }
       },
+      "required": [ "vin", "mileage" ],
       "additionalProperties": false
     }
   },

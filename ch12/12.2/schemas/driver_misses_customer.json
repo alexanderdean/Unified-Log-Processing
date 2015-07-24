@@ -23,6 +23,7 @@
           "maximum": 32767
         }
       },
+      "required": [ "latitude", "longitude", "elevation" ],
       "additionalProperties": false
     },
     "employee": {
@@ -36,6 +37,7 @@
           "enum": [ "JNR_DRIVER", "SNR_DRIVER" ]
         }
       },
+      "required": [ "id", "jobRole" ],
       "additionalProperties": false
     },
     "package": {

@@ -40,7 +40,7 @@
           "maximum": 32767
         }
       },
-      "required": [ "longitude", "latitude", "elevation" ],
+      "required": [ "latitude", "longitude", "elevation" ],
       "additionalProperties": false
     }
   },
