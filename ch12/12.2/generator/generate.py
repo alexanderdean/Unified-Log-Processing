@@ -48,7 +48,7 @@ class Customer(Jsonable):
 class Event(object, Jsonable):
   def __init__(self, event, timestamp):
     self.event = event
-    self.timestamp = timestamp.isoformat()
+    self.timestamp = timestamp.isoformat() + "Z"
 
 class TruckArrivesEvent(Event):
   def __init__(self, timestamp, vehicle, location):
