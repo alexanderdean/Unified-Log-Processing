@@ -13,13 +13,13 @@ class Jsonable:
 class Employee(Jsonable):
   def __init__(self, id, job_role):
     self.id = id
-    self.job_role = job_role
+    self.jobRole = job_role
 
   def promote(self):
-    if self.job_role == "JNR_MECHANIC":
-      self.job_role = "SNR_MECHANIC"
-    elif self.job_role == "JNR_DRIVER":
-      self.job_role = "SNR_DRIVER"
+    if self.jobRole == "JNR_MECHANIC":
+      self.jobRole = "SNR_MECHANIC"
+    elif self.jobRole == "JNR_DRIVER":
+      self.jobRole = "SNR_DRIVER"
 
 class Vehicle(Jsonable):
   def __init__(self, vin, mileage):
@@ -43,7 +43,7 @@ class Package(Jsonable):
 class Customer(Jsonable):
   def __init__(self, id, is_vip):
     self.id = id
-    self.is_vip = is_vip
+    self.isVip = is_vip
 
 class Event(object, Jsonable):
   def __init__(self, event, timestamp):
