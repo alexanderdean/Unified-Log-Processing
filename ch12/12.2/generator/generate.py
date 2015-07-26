@@ -138,7 +138,7 @@ if __name__ == '__main__':
     # Choose truck
     truck = random.choice(TRUCKS)
     # Choose mechanic with weight
-    if random.randint(0,8) >= 6:
+    if random.randint(0,8) >= 7:
       mechanic = MECHANICS[0]
     else:
       mechanic = MECHANICS[1]

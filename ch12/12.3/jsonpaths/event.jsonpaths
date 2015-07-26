@@ -1,22 +1,16 @@
 {
   "jsonpaths": [
-
     "$.event",
     "$.timestamp",
-
-    "$.vehicle.vin",
-    "$.vehicle.mileage",
-
-    "$.location.longitude",
-    "$.location.latitude",
-    "$.location.elevation",
-
+    "$.customer.id",
+    "$.customer.isVip",
     "$.employee.id",
     "$.employee.jobRole",
-
+    "$.location.elevation",
+    "$.location.latitude",
+    "$.location.longitude",
     "$.package.id",
-
-    "$.customer.id",
-    "$.customer.isVip"
+    "$.vehicle.mileage",
+    "$.vehicle.vin"
   ]
 }
