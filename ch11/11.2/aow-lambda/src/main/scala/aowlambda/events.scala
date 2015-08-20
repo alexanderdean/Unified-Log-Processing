@@ -3,7 +3,7 @@ package aowlambda
 import java.util.UUID, org.joda.time.DateTime
 import org.json4s._, org.json4s.jackson.JsonMethods._
 
-case class EventSniffer(`type`: String)                             // a
+case class EventSniffer(event: String)                              // a
 case class Employee(id: UUID, jobRole: String)
 case class Vehicle(vin: String, mileage: Int)
 case class Location(latitude: Double, longitude: Double, elevation: Int)
@@ -25,15 +25,15 @@ case class DriverMissesCustomer(timestamp: DateTime, employee: Employee,
 object Event {
 
   def fromBytes(byteArray: Array[Byte]): Event = {
-    implicit val formats = DefaultFormats
-    val parsed = parse(new String(byteArray, "UTF-8"))
-    parsed.extract[EventSniffer].`type` match {                    // c
-      case "TRUCK_ARRIVES" => parsed.extract[TruckArrivesEvent]
-      case "TRUCK_DEPARTS" => parsed.extract[TruckDepartsEvent]
-      case "MECHANIC_CHANGES_OIL" => parsed.extract[MechanicChangesOil]
-      case "DRIVER_DELIVERS_PACKAGE" => parsed.extract[DriverDeliversPackage]
-      case "DRIVER_MISSES_CUSTOMER" => parsed.extract[DriverMissesCustomer]
-      case _ => parsed.extract[Event]                              // d
+    implicit val formats = DefaultFormats ++ ext.JodaTimeSerializers.all
+    val raw = parse(new String(byteArray, "UTF-8"))
+    raw.extract[EventSniffer].event match {                        // c
+      case "TRUCK_ARRIVES" => raw.extract[TruckArrivesEvent]
+      case "TRUCK_DEPARTS" => raw.extract[TruckDepartsEvent]
+      case "MECHANIC_CHANGES_OIL" => raw.extract[MechanicChangesOil]
+      case "DRIVER_DELIVERS_PACKAGE" => raw.extract[DriverDeliversPackage]
+      case "DRIVER_MISSES_CUSTOMER" => raw.extract[DriverMissesCustomer]
+      case e => throw new RuntimeException("Didn't expect " + e)   // d
     }
   }
 }

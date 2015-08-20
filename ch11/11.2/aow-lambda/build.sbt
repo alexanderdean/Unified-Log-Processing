@@ -12,6 +12,7 @@ lazy val root = (project in file(".")).
     libraryDependencies += "com.amazonaws" % "aws-java-sdk-core"          % "1.9.34" % "provided", // b
     libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.5.2",
     libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11",
+    libraryDependencies += "org.json4s" %% "json4s-ext" % "3.2.11",
     libraryDependencies += "com.github.seratch" %% "awscala" % "0.5.+"
   )
 
