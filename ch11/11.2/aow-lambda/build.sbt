@@ -21,4 +21,3 @@ mergeStrategy in assembly := { // c
 }
 
 jarName in assembly := { s"${name.value}-${version.value}" }
-
