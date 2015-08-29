@@ -23,7 +23,7 @@ object EventAggregator {
       .toList
       .map(_.reduceLeft(merge))
 
-  def merge: (Row, Row) => Row = (a, b) => {                       // d
+  private val merge: (Row, Row) => Row = (a, b) => {               // d
 
     val m = math.max(a.mileage, b.mileage)
     val maoc = (a.mileageAtOilChange, b.mileageAtOilChange) match {
