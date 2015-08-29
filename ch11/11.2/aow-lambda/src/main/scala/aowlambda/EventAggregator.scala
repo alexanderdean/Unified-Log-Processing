@@ -26,17 +26,16 @@ object EventAggregator {
   def merge: (Row, Row) => Row = (a, b) => {                       // d
 
     val m = math.max(a.mileage, b.mileage)
-    val locTs = (a.locationTs, b.locationTs) match {
-      case (l @ Some(_), None) => l
-      case (l @ Some((_, lTs)), Some((_, rTs))) if lTs.isAfter(rTs) => l
-      case (_, r) => r
-    }
     val maoc = (a.mileageAtOilChange, b.mileageAtOilChange) match {
       case (l @ Some(_), None) => l
       case (l @ Some(lMaoc), Some(rMaoc)) if lMaoc > rMaoc => l
       case (_, r) => r
     }
-
+    val locTs = (a.locationTs, b.locationTs) match {
+      case (l @ Some(_), None) => l
+      case (l @ Some((_, lTs)), Some((_, rTs))) if lTs.isAfter(rTs) => l
+      case (_, r) => r
+    }
     Row(a.vin, m, maoc, locTs)
   }
 }
