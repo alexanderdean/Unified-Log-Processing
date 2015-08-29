@@ -11,9 +11,9 @@ case class Package(id: UUID)
 case class Customer(id: UUID, isVip: Boolean)
 
 sealed trait Event                                                  // b
-case class TruckArrivesEvent(timestamp: DateTime, vehicle: Vehicle, 
+case class TruckArrives(timestamp: DateTime, vehicle: Vehicle, 
   location: Location) extends Event
-case class TruckDepartsEvent(timestamp: DateTime, vehicle: Vehicle, 
+case class TruckDeparts(timestamp: DateTime, vehicle: Vehicle, 
   location: Location) extends Event
 case class MechanicChangesOil(timestamp: DateTime, employee: Employee, 
   vehicle: Vehicle) extends Event
@@ -28,8 +28,8 @@ object Event {
     implicit val formats = DefaultFormats ++ ext.JodaTimeSerializers.all
     val raw = parse(new String(byteArray, "UTF-8"))
     raw.extract[EventSniffer].event match {                        // c
-      case "TRUCK_ARRIVES" => raw.extract[TruckArrivesEvent]
-      case "TRUCK_DEPARTS" => raw.extract[TruckDepartsEvent]
+      case "TRUCK_ARRIVES" => raw.extract[TruckArrives]
+      case "TRUCK_DEPARTS" => raw.extract[TruckDeparts]
       case "MECHANIC_CHANGES_OIL" => raw.extract[MechanicChangesOil]
       case "DRIVER_DELIVERS_PACKAGE" => raw.extract[DriverDeliversPackage]
       case "DRIVER_MISSES_CUSTOMER" => raw.extract[DriverMissesCustomer]
