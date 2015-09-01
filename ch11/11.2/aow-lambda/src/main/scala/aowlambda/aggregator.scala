@@ -6,7 +6,7 @@ import org.joda.time.DateTime, aowlambda.{TruckArrives => TA},
 case class Row(vin: String, mileage: Int, mileageAtOilChange: Option[Int],
   locationTs: Option[(Location, DateTime)])                        // a
 
-object EventAggregator {
+object Aggregator {
 
   def map(event: Event): Option[Row] = event match {               // b
     case TA(ts, v, loc) => Some(Row(v.vin, v.mileage, None, Some(loc, ts)))
