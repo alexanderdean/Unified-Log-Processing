@@ -7,13 +7,17 @@ class LambdaFunction {
 
   def recordHandler(microBatch: KinesisEvent) {
 
-    val allRows = for {
-      rec <- microBatch.getRecords.asScala.toList
-      bytes = rec.getKinesis.getData.array 
+    val allRows = for {                                            // a
+      recs <- microBatch.getRecords.asScala.toList
+      bytes = recs.getKinesis.getData.array 
       event = Event.fromBytes(bytes)
       row = Aggregator.map(event)
     } yield row
 
-    val reducedRows = Aggregator.reduce(allRows)
+    val reducedRows = Aggregator.reduce(allRows)                   // b
+
+    for (row <- reducedRows) {                                     // c
+      Writer.write(row)
+    }
   }
 }

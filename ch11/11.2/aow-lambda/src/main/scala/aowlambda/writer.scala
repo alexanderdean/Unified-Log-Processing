@@ -1,5 +1,0 @@
-package aowlambda
-
-object Writer {
-
-}
