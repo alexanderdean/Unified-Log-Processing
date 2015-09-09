@@ -1,63 +1,48 @@
 package aowlambda
 
 import awscala._, dynamodbv2._
-import com.amazonaws.services.dynamodbv2.model.{AttributeValue => _,
-  AttributeAction => _, _}
+import com.amazonaws.services.dynamodbv2.model.{AttributeAction => _,
+  AttributeValue => AwsAttributeValue, _}
 
 object Writer {
 
   private val ddb = DynamoDB.at(Region.US_EAST_1)
 
-  private def avu(av: AttributeValue) = new AttributeValueUpdate()
+  private def att(av: AwsAttributeValue) = new AttributeValueUpdate()
     .withValue(av)
     .withAction(AttributeAction.Add)
 
-  private def eav(av: AttributeValue) = new ExpectedAttributeValue()
+  private def exp(av: AwsAttributeValue) = new ExpectedAttributeValue()
     .withValue(av)
     .withComparisonOperator(ComparisonOperator.GT)
 
   def write(row: Row) {
-    val vinAV = AttributeValue(s = Some(row.vin))
 
-    val mileageAV = AttributeValue(n = Some(row.mileage.toString))
-    val _ = ddb.updateItem(new UpdateItemRequest()            // a
+    val partialUIR = new UpdateItemRequest()                       // a
       .withTableName("oops-trucks")
-      .addKeyEntry("vin", vinAV)
-      .addAttributeUpdatesEntry("mileage", avu(mileageAV))
-      .addExpectedEntry("mileage", eav(mileageAV)))
+      .addKeyEntry("vin", AttributeValue(s = Some(row.vin)))
 
-    for (maoc <- row.mileageAtOilChange) {                         // b
-      val maocAV = AttributeValue(n = Some(row.mileage.toString))
-      val _ = ddb.updateItem(new UpdateItemRequest()
-        .withTableName("oops-trucks")
-        .addKeyEntry("vin", vinAV)
-        .addAttributeUpdatesEntry("mileage-at-oil-change", avu(maocAV))
-        .addExpectedEntry("mileage-at-oil-change", eav(maocAV)))
+    val mileageAV = AttributeValue.toJavaValue(row.mileage)        // b
+    val _ = ddb.updateItem(partialUIR
+      .addAttributeUpdatesEntry("mileage", att(mileageAV))
+      .addExpectedEntry("mileage", exp(mileageAV)))
 
+    for (maoc <- row.mileageAtOilChange) {                         // c
+      val maocAV = AttributeValue.toJavaValue(row.mileage)
+      val _ = ddb.updateItem(partialUIR
+        .addAttributeUpdatesEntry("mileage-at-oil-change", att(maocAV))
+        .addExpectedEntry("mileage-at-oil-change", exp(maocAV)))
+    } 
+
+    for ((loc, ts) <- row.locationTs) {                            // d
+      val tsAV = AttributeValue.toJavaValue(ts.toString)
+      val latAV = AttributeValue.toJavaValue(loc.latitude.toString)
+      val longAV = AttributeValue.toJavaValue(loc.longitude.toString)
+      val _ = ddb.updateItem(partialUIR
+        .addAttributeUpdatesEntry("location-timestamp", att(tsAV))
+        .addAttributeUpdatesEntry("latitude", att(latAV))
+        .addAttributeUpdatesEntry("longitude", att(longAV))        
+        .addExpectedEntry("location-timestamp", exp(tsAV)))
     }
-
-/*
-            UpdateItemResult result = dynamodb.updateItem(new UpdateItemRequest()
-                .withTableName("Game")
-                .withReturnValues(ReturnValue.ALL_NEW)
-                .addKeyEntry("GameId", new AttributeValue("abc"))
-                .addAttributeUpdatesEntry(
-                     "Player1-Position", new AttributeValueUpdate()
-                         .withValue(new AttributeValue().withN("1"))
-                         .withAction(AttributeAction.ADD))
-                .addExpectedEntry(
-                     "Player1-Position", new ExpectedAttributeValue()
-                         .withValue(new AttributeValue().withN("20"))
-                         .withComparisonOperator(ComparisonOperator.LT))
-                .addExpectedEntry(
-                     "Player2-Position", new ExpectedAttributeValue()
-                         .withValue(new AttributeValue().withN("20"))
-                         .withComparisonOperator(ComparisonOperator.LT))
-                .addExpectedEntry(
-                     "Status", new ExpectedAttributeValue()
-                         .withValue(new AttributeValue().withS("IN_PROGRESS"))
-                         .withComparisonOperator(ComparisonOperator.EQ))
- */
-
   }
 }
