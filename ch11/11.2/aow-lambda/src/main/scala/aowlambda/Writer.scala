@@ -24,7 +24,7 @@ object Writer {
       .withTableName("oops-trucks")
       .addKeyEntry("vin", vinAV)
       .addAttributeUpdatesEntry("mileage", avu(mileageAV))
-      .addExpectedEntry("mileage", eav(mileageAV))
+      .addExpectedEntry("mileage", eav(mileageAV)))
 
     for (maoc <- row.mileageAtOilChange) {                         // b
       val maocAV = AttributeValue(n = Some(row.mileage.toString))
