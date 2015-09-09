@@ -17,7 +17,7 @@ class LambdaFunction {
     val reducedRows = Aggregator.reduce(allRows)                   // b
 
     for (row <- reducedRows) {                                     // c
-      Writer.write(row)
+      Writer.conditionalWrite(row)
     }
   }
 }

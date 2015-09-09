@@ -16,14 +16,14 @@ object Writer {
     .withValue(av)
     .withComparisonOperator(ComparisonOperator.GT)
 
-  def write(row: Row) {
+  def conditionalWrite(row: Row) {
 
     val partialUIR = new UpdateItemRequest()                       // a
       .withTableName("oops-trucks")
       .addKeyEntry("vin", AttributeValue(s = Some(row.vin)))
 
-    val mileageAV = AttributeValue.toJavaValue(row.mileage)        // b
-    val _ = ddb.updateItem(partialUIR
+    val mileageAV = AttributeValue.toJavaValue(row.mileage)
+    val _ = ddb.updateItem(partialUIR                              // b
       .addAttributeUpdatesEntry("mileage", att(mileageAV))
       .addExpectedEntry("mileage", exp(mileageAV)))
 
