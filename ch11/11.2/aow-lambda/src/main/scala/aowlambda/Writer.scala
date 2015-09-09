@@ -14,7 +14,7 @@ object Writer {
 
   private def exp(av: AwsAttributeValue) = new ExpectedAttributeValue()
     .withValue(av)
-    .withComparisonOperator(ComparisonOperator.GT)
+    .withComparisonOperator(ComparisonOperator.LT)
 
   def conditionalWrite(row: Row) {
 
