@@ -9,7 +9,7 @@ object Writer {
   private val ddb = DynamoDB.at(Region.US_EAST_1)
 
   private def avu(av: AttributeValue) = new AttributeValueUpdate()
-    .withValue(mileageAV)
+    .withValue(av)
     .withAction(AttributeAction.Add)
 
   private def eav(av: AttributeValue) = new ExpectedAttributeValue()
