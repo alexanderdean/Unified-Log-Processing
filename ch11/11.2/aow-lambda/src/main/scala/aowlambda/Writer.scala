@@ -20,7 +20,7 @@ object Writer {
 
     val partialUIR = new UpdateItemRequest()                       // a
       .withTableName("oops-trucks")
-      .addKeyEntry("vin", AttributeValue(s = Some(row.vin)))
+      .addKeyEntry("vin", AttributeValue.toJavaValue(row.vin))
 
     val mileageAV = AttributeValue.toJavaValue(row.mileage)
     val _ = ddb.updateItem(partialUIR                              // b
@@ -36,8 +36,8 @@ object Writer {
 
     for ((loc, ts) <- row.locationTs) {                            // d
       val tsAV = AttributeValue.toJavaValue(ts.toString)
-      val latAV = AttributeValue.toJavaValue(loc.latitude.toString)
-      val longAV = AttributeValue.toJavaValue(loc.longitude.toString)
+      val latAV = AttributeValue.toJavaValue(loc.latitude)
+      val longAV = AttributeValue.toJavaValue(loc.longitude)
       val _ = ddb.updateItem(partialUIR
         .addAttributeUpdatesEntry("location-timestamp", att(tsAV))
         .addAttributeUpdatesEntry("latitude", att(latAV))
