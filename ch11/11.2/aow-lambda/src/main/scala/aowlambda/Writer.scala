@@ -3,6 +3,7 @@ package aowlambda
 import awscala._, dynamodbv2._
 import com.amazonaws.services.dynamodbv2.model.{AttributeAction => _,
   AttributeValue => AwsAttributeValue, _}
+import scala.collection.JavaConverters._
 
 object Writer {
 
@@ -25,7 +26,9 @@ object Writer {
     val mileageAV = AttributeValue.toJavaValue(row.mileage)
     try { ddb.updateItem(stubUIR                                   // b
       .addAttributeUpdatesEntry("mileage", att(mileageAV))
-      .addExpectedEntry("mileage", exp(mileageAV)))
+      .withConditionExpression("""attribute_not_exists(mileage) OR
+        mileage < :m""")
+      .withExpressionAttributeValues(Map(":m" -> mileageAV).asJava))
     } catch { case ccfe: ConditionalCheckFailedException => }
 
     for (maoc <- row.mileageAtOilChange) {                         // c
