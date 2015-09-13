@@ -10,7 +10,7 @@ object Writer {
 
   private def att(av: AwsAttributeValue) = new AttributeValueUpdate()
     .withValue(av)
-    .withAction(AttributeAction.Add)
+    .withAction(AttributeAction.Put)
 
   private def exp(av: AwsAttributeValue) = new ExpectedAttributeValue()
     .withValue(av)
@@ -18,31 +18,32 @@ object Writer {
 
   def conditionalWrite(row: Row) {
 
-    val partialUIR = new UpdateItemRequest()                       // a
+    def stubUIR() = new UpdateItemRequest()                        // a
       .withTableName("oops-trucks")
       .addKeyEntry("vin", AttributeValue.toJavaValue(row.vin))
 
     val mileageAV = AttributeValue.toJavaValue(row.mileage)
-    val _ = ddb.updateItem(partialUIR                              // b
+    try { ddb.updateItem(stubUIR                                   // b
       .addAttributeUpdatesEntry("mileage", att(mileageAV))
       .addExpectedEntry("mileage", exp(mileageAV)))
+    } catch { case ccfe: ConditionalCheckFailedException => }
 
     for (maoc <- row.mileageAtOilChange) {                         // c
       val maocAV = AttributeValue.toJavaValue(row.mileage)
-      val _ = ddb.updateItem(partialUIR
-        .addAttributeUpdatesEntry("mileage-at-oil-change", att(maocAV))
-        .addExpectedEntry("mileage-at-oil-change", exp(maocAV)))
+      val _ = ddb.updateItem(stubUIR
+        .addAttributeUpdatesEntry("mileage-at-oil-change", att(maocAV)))
+        //.addExpectedEntry("mileage-at-oil-change", exp(maocAV)))
     } 
 
     for ((loc, ts) <- row.locationTs) {                            // d
       val tsAV = AttributeValue.toJavaValue(ts.toString)
       val latAV = AttributeValue.toJavaValue(loc.latitude)
       val longAV = AttributeValue.toJavaValue(loc.longitude)
-      val _ = ddb.updateItem(partialUIR
+      val _ = ddb.updateItem(stubUIR
         .addAttributeUpdatesEntry("location-timestamp", att(tsAV))
         .addAttributeUpdatesEntry("latitude", att(latAV))
-        .addAttributeUpdatesEntry("longitude", att(longAV))        
-        .addExpectedEntry("location-timestamp", exp(tsAV)))
+        .addAttributeUpdatesEntry("longitude", att(longAV)))
+        //.addExpectedEntry("location-timestamp", exp(tsAV)))
     }
   }
 }

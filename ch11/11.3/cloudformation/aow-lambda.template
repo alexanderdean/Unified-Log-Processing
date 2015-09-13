@@ -29,7 +29,7 @@
             },{
               "Effect": "Allow",
               "Action": [
-                "s3:*"
+                "kinesis:*"
               ],
               "Resource": [
                 "*"
