@@ -1,51 +1,52 @@
 package aowlambda
 
-import awscala._, dynamodbv2._
-import com.amazonaws.services.dynamodbv2.model.{AttributeAction => _,
-  AttributeValue => AwsAttributeValue, _}
+import awscala._, dynamodbv2.{AttributeValue => AttrVal, _}
+import com.amazonaws.services.dynamodbv2.model._
 import scala.collection.JavaConverters._
 
 object Writer {
-
   private val ddb = DynamoDB.at(Region.US_EAST_1)
 
-  private def att(av: AwsAttributeValue) = new AttributeValueUpdate()
-    .withValue(av)
-    .withAction(AttributeAction.Put)
+  private def updateIf(key: AttributeValue, updExpr: String,
+    condExpr: String, values: Map[String, AttributeValue],
+    names: Map[String, String]) {                                  // a
 
-  private def exp(av: AwsAttributeValue) = new ExpectedAttributeValue()
-    .withValue(av)
-    .withComparisonOperator(ComparisonOperator.LT)
+    val updateRequest = new UpdateItemRequest()
+      .withTableName("oops-trucks")
+      .addKeyEntry("vin", key)
+      .withUpdateExpression(updExpr)
+      .withConditionExpression(condExpr)
+      .withExpressionAttributeValues(values.asJava)
+      .withExpressionAttributeNames(names.asJava)
+
+    try {
+      ddb.updateItem(updateRequest)
+    } catch { case ccfe: ConditionalCheckFailedException => }      // b
+  }
 
   def conditionalWrite(row: Row) {
+    val vin = AttrVal.toJavaValue(row.vin)
 
-    def stubUIR() = new UpdateItemRequest()                        // a
-      .withTableName("oops-trucks")
-      .addKeyEntry("vin", AttributeValue.toJavaValue(row.vin))
+    updateIf(vin, "SET #m = :m",
+      "attribute_not_exists(#m) OR #m < :m",
+      Map(":m" -> AttrVal.toJavaValue(row.mileage)),
+      Map("#m" -> "mileage"))                                      // c
 
-    try { ddb.updateItem(stubUIR                                   // b
-      .withUpdateExpression("SET mileage = :m")
-      .withConditionExpression("attribute_not_exists(mileage) OR mileage < :m")
-      .withExpressionAttributeValues(Map(
-        ":m" -> AttributeValue.toJavaValue(row.mileage)).asJava))
-    } catch { case ccfe: ConditionalCheckFailedException => }
+    for (maoc <- row.mileageAtOilChange) {                         // d
+      updateIf(vin, "SET #maoc = :maoc",
+        "attribute_not_exists(#maoc) OR #maoc < :m",
+        Map(":maoc" -> AttrVal.toJavaValue(maoc)),
+        Map("#maoc" -> "mileage-at-oil-change"))
+    }
 
-    for (maoc <- row.mileageAtOilChange) {                         // c
-      val maocAV = AttributeValue.toJavaValue(row.mileage)
-      val _ = ddb.updateItem(stubUIR
-        .addAttributeUpdatesEntry("mileage-at-oil-change", att(maocAV)))
-        //.addExpectedEntry("mileage-at-oil-change", exp(maocAV)))
-    } 
-
-    for ((loc, ts) <- row.locationTs) {                            // d
-      val tsAV = AttributeValue.toJavaValue(ts.toString)
-      val latAV = AttributeValue.toJavaValue(loc.latitude)
-      val longAV = AttributeValue.toJavaValue(loc.longitude)
-      val _ = ddb.updateItem(stubUIR
-        .addAttributeUpdatesEntry("location-timestamp", att(tsAV))
-        .addAttributeUpdatesEntry("latitude", att(latAV))
-        .addAttributeUpdatesEntry("longitude", att(longAV)))
-        //.addExpectedEntry("location-timestamp", exp(tsAV)))
+    for ((loc, ts) <- row.locationTs) {                            // e
+      updateIf(vin, "SET #ts = :ts, #lat = :lat, #long = :long",
+        "attribute_not_exists(#ts) OR #ts < :ts",
+        Map(":ts"   -> AttrVal.toJavaValue(ts.toString),
+            ":lat"  -> AttrVal.toJavaValue(loc.latitude),
+            ":long" -> AttrVal.toJavaValue(loc.longitude)),
+        Map("#ts"   -> "location-timestamp", "#lat" -> "latitude",
+            "#long" -> "longitude"))
     }
   }
 }
