@@ -23,12 +23,11 @@ object Writer {
       .withTableName("oops-trucks")
       .addKeyEntry("vin", AttributeValue.toJavaValue(row.vin))
 
-    val mileageAV = AttributeValue.toJavaValue(row.mileage)
     try { ddb.updateItem(stubUIR                                   // b
-      .addAttributeUpdatesEntry("mileage", att(mileageAV))
-      .withConditionExpression("""attribute_not_exists(mileage) OR
-        mileage < :m""")
-      .withExpressionAttributeValues(Map(":m" -> mileageAV).asJava))
+      .withUpdateExpression("SET mileage = :m")
+      .withConditionExpression("attribute_not_exists(mileage) OR mileage < :m")
+      .withExpressionAttributeValues(Map(
+        ":m" -> AttributeValue.toJavaValue(row.mileage)).asJava))
     } catch { case ccfe: ConditionalCheckFailedException => }
 
     for (maoc <- row.mileageAtOilChange) {                         // c
