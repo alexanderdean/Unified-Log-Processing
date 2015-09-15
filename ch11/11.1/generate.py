@@ -24,8 +24,8 @@ class Vehicle(Jsonable):
     self.vin = vin
     self.mileage = mileage
 
-  def add_miles(self):
-    self.mileage += random.randint(0,30)
+  def step_miles(self, clock_direction):
+    self.mileage += (clock_direction * random.randint(0,30))
     return self
 
 class Location(Jsonable):
@@ -86,8 +86,8 @@ class Clock:
   def __init__(self, timestamp):
     self.timestamp = timestamp
 
-  def advance(self):
-    self.timestamp += datetime.timedelta(0, 0, 0, 0, -random.randint(0,300))
+  def step(self, forwards, clock_direction):
+    self.timestamp += datetime.timedelta(0, 0, 0, 0, (clock_direction * random.randint(0,300)))
     return self.timestamp
 
 MECHANICS = [
@@ -107,36 +107,56 @@ TRUCKS = [
   Vehicle("19UYA31581L000000", 6754)
 ]
 
-DEPOT_LOC = Location(51.5228340, -0.0818130, 7)
-GARAGE_LOC = Location(51.4865047, -0.0639602, 4)
-CUSTOMERS_LOCS_UNRELIABLE = [
-  # Tuple3 of customer, location, and whether they are unreliable (i.e. often out)
-  (Customer("b39a2b30-049b-436a-a45d-46d290df65d3", True), Location(51.5208046, -0.1592323, -25), False),
-  (Customer("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7", False), Location(51.4972997, -0.0955459, 102), True),
-  (Customer("b1e5d874-963b-4992-a232-4679438261ab", False), Location(51.4704679, -0.1176902, 15), False)
+LOCATIONS = [
+  Location(51.5228340, -0.0818130, 7),
+  Location(51.5208046, -0.1592323, -25),
+  Location(51.4972997, -0.0955459, 102),
+  Location(51.4704679, -0.1176902, 15),
+  Location(51.4865047, -0.0639602, 4)
 ]
 
-packages = set([
-  (Package("c09e4ee4-52a7-4cdb-bfbf-6025b60a9144"), CUSTOMERS_LOCS_UNRELIABLE[0]),
-  (Package("ec99793d-94e7-455f-8787-1f8ebd76ef61"), CUSTOMERS_LOCS_UNRELIABLE[1]),
-  (Package("14a714cf-5a89-417e-9c00-f2dba0d1844d"), CUSTOMERS_LOCS_UNRELIABLE[1]),
-  (Package("834bc3e0-595f-4a6f-a827-5580f3d346f7"), CUSTOMERS_LOCS_UNRELIABLE[2]),
-  (Package("79fee326-aaeb-4cc6-aa4f-f2f98f443271"), CUSTOMERS_LOCS_UNRELIABLE[0]) 
-])
+CUSTOMERS = [
+  Customer("b39a2b30-049b-436a-a45d-46d290df65d3"),
+  Customer("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7"),
+  Customer("b1e5d874-963b-4992-a232-4679438261ab")
+]
+
+PACKAGES = [
+  Package("c09e4ee4-52a7-4cdb-bfbf-6025b60a9144"),
+  Package("ec99793d-94e7-455f-8787-1f8ebd76ef61"),
+  Package("14a714cf-5a89-417e-9c00-f2dba0d1844d"),
+  Package("834bc3e0-595f-4a6f-a827-5580f3d346f7"),
+  Package("79fee326-aaeb-4cc6-aa4f-f2f98f443271")
+]
 
 clock = Clock(datetime.datetime(2015, 1, 1))
 
-def write_event(conn, stream_name):
+def write_event(conn, stream_name, clock_direction):
   global clock
-  truck = random.choice(TRUCKS)
-  event = TruckDepartsEvent(clock.advance(), truck.add_miles(), DEPOT_LOC).to_json()
+
+  mechanic = random.choice(MECHANICS)
+  driver = random.choice(DRIVERS)
+  truck = random.choice(TRUCKS).step_miles(clock_direction)
+  location = random.choice(LOCATIONS)
+  customer = random.choice(CUSTOMERS)
+  package = random.choice(PACKAGES)
+  timestamp = clock.step(clock_direction)
+
+  event = random.choice([
+    TruckDepartsEvent(timestamp, truck, location),
+    TruckArrivesEvent(timestamp, truck, location),
+    MechanicChangesOil(timestamp, mechanic, truck),
+    DriverMissesCustomer(timestamp, driver, package, customer, location),
+    DriverDeliversPackage(timestamp, driver, package, customer, location)
+    ])
+
   conn.put_record(stream_name, event, str(random.random()))
   return event
 
-if __name__ == '__main__':                                        # a
+if __name__ == '__main__':
   conn = kinesis.connect_to_region(region_name="us-east-1",
     profile_name="ulp")
-  while True:                                                     # b
-    event = write_event(conn, "oops-events")
+  while True:
+    event = write_event(conn, "oops-events", 1)
     print "Wrote event: {}".format(event)
-    time.sleep(2)                                                # c
+    time.sleep(2)
