@@ -25,7 +25,8 @@ case class DriverMissesCustomer(timestamp: DateTime, employee: Employee,
 object Event {
 
   def fromBytes(byteArray: Array[Byte]): Event = {
-    implicit val formats = DefaultFormats ++ ext.JodaTimeSerializers.all
+    implicit val formats = DefaultFormats ++ ext.JodaTimeSerializers.all ++
+      ext.JavaTypesSerializers.all
     val raw = parse(new String(byteArray, "UTF-8"))
     raw.extract[EventSniffer].event match {                        // c
       case "TRUCK_ARRIVES" => raw.extract[TruckArrives]

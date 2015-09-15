@@ -34,7 +34,7 @@ object Writer {
 
     for (maoc <- row.mileageAtOilChange) {                         // d
       updateIf(vin, "SET #maoc = :maoc",
-        "attribute_not_exists(#maoc) OR #maoc < :m",
+        "attribute_not_exists(#maoc) OR #maoc < :maoc",
         Map(":maoc" -> AttrVal.toJavaValue(maoc)),
         Map("#maoc" -> "mileage-at-oil-change"))
     }

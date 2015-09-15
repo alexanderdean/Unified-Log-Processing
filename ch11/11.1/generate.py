@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import random, datetime, json, copy, time
+import random, datetime, json, copy, time, sys
 from boto import kinesis
 
 class Jsonable:
@@ -86,7 +86,7 @@ class Clock:
   def __init__(self, timestamp):
     self.timestamp = timestamp
 
-  def step(self, forwards, clock_direction):
+  def step(self, clock_direction):
     self.timestamp += datetime.timedelta(0, 0, 0, 0, (clock_direction * random.randint(0,300)))
     return self.timestamp
 
@@ -116,9 +116,9 @@ LOCATIONS = [
 ]
 
 CUSTOMERS = [
-  Customer("b39a2b30-049b-436a-a45d-46d290df65d3"),
-  Customer("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7"),
-  Customer("b1e5d874-963b-4992-a232-4679438261ab")
+  Customer("b39a2b30-049b-436a-a45d-46d290df65d3", True),
+  Customer("4594f1a1-a7a2-4718-bfca-6e51e73cc3e7", False),
+  Customer("b1e5d874-963b-4992-a232-4679438261ab", False)
 ]
 
 PACKAGES = [
@@ -150,13 +150,19 @@ def write_event(conn, stream_name, clock_direction):
     DriverDeliversPackage(timestamp, driver, package, customer, location)
     ])
 
-  conn.put_record(stream_name, event, str(random.random()))
-  return event
+  conn.put_record(stream_name, event.to_json(), str(random.random()))
+  return (event.__class__.__name__, timestamp)
 
 if __name__ == '__main__':
   conn = kinesis.connect_to_region(region_name="us-east-1",
     profile_name="ulp")
+
+  if len(sys.argv) >= 2 and sys.argv[1] == "backwards":
+    step_direction = -1
+  else:
+    step_direction = 1
+
   while True:
-    event = write_event(conn, "oops-events", 1)
-    print "Wrote event: {}".format(event)
-    time.sleep(2)
+    event, ts = write_event(conn, "oops-events", step_direction)
+    print "Wrote {} with timestamp {}".format(event, ts)
+    time.sleep(1)
