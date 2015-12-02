@@ -23,7 +23,7 @@ public class NileProducer {
     this.producer.send(km);
   }
 
-  public static ProducerConfig createConfig(String brokers) {
+  private static ProducerConfig createConfig(String brokers) {
     Properties props = new Properties();
     props.put("metadata.broker.list", brokers);
     props.put("request.required.acks", "1");
