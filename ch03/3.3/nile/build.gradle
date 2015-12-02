@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-sourceCompatibility = '1.8'
+sourceCompatibility = '1.7'
 
-mainClassName = 'weatherenrich.WeatherEnrich'
+mainClassName = 'nile.StreamApp'
 
 repositories {
   mavenCentral()
@@ -17,7 +17,18 @@ dependencies {
     exclude group: 'com.sun.jdmk', module: 'jmxtools'
     exclude group: 'com.sun.jmx', module: 'jmxri'
   }
-  compile 'com.github.fge:json-schema-validator:2.2.3'
   compile 'org.slf4j:slf4j-api:1.7.5'
-  testCompile 'junit:junit:4.11'
+}
+
+jar {
+  dependsOn configurations.compile
+  from {
+    configurations.compile.collect {
+      it.isDirectory() ? it : zipTree(it)
+    }
+  } {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
 }
