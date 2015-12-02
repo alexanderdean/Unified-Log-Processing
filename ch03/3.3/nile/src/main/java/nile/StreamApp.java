@@ -2,6 +2,7 @@ package nile;
 
 public class StreamApp {
 
+  // e.g. java -jar ./build/libs/nile-0.1.0.jar "127.0.0.1:2181" "localhost:9092" "stream-app-pt1" "raw-events" "all-events" 2
   public static void main(String[] args) {
     String zookeeper = args[0];
     String brokers = args[1];

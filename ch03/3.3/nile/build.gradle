@@ -21,6 +21,10 @@ dependencies {
 }
 
 jar {
+  manifest {
+    attributes 'Main-Class': mainClassName
+  }
+
   dependsOn configurations.compile
   from {
     configurations.compile.collect {

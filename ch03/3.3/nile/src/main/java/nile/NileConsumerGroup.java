@@ -56,7 +56,6 @@ public class NileConsumerGroup {
     props.put("zookeeper.session.timeout.ms", "400");
     props.put("zookeeper.sync.time.ms", "200");
     props.put("auto.commit.interval.ms", "1000");
-
     return new ConsumerConfig(props);
   }
 }

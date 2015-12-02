@@ -12,8 +12,8 @@ public class NileProducer {
   private String topic;
 
   public NileProducer(String brokers, String topic) {
-  	this.producer = new Producer<byte[], byte[]>(
-  	 createConfig(brokers));
+    this.producer = new Producer<byte[], byte[]>(
+      createConfig(brokers));
     this.topic = topic;
   }
 
@@ -27,7 +27,6 @@ public class NileProducer {
     Properties props = new Properties();
     props.put("metadata.broker.list", brokers);
     props.put("request.required.acks", "1");
-    
     return new ProducerConfig(props);
   }
 }
