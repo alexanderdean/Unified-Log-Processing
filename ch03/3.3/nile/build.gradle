@@ -17,6 +17,7 @@ dependencies {
     exclude group: 'com.sun.jdmk', module: 'jmxtools'
     exclude group: 'com.sun.jmx', module: 'jmxri'
   }
+  compile 'com.maxmind.geoip:geoip-api:1.2.14'
   compile 'org.slf4j:slf4j-api:1.7.5'
 }
 

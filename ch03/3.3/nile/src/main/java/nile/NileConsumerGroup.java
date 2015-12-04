@@ -1,16 +1,9 @@
 package nile;
 
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
-import kafka.consumer.Consumer;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.KafkaStream;
+import kafka.consumer.*;
 import kafka.javaapi.consumer.ConsumerConnector;
 
 public class NileConsumerGroup {
@@ -28,7 +21,7 @@ public class NileConsumerGroup {
     this.numThreads = numThreads;
   }
 
-  public void run(NileProducer producer) {
+  public void run(INileProducer producer) {
     Map<String, Integer> topicMap = new HashMap<String, Integer>();
     topicMap.put(this.topic, new Integer(this.numThreads));
     List<KafkaStream<byte[], byte[]>> streams = consumer

@@ -1,15 +1,14 @@
 package nile;
 
-import kafka.consumer.KafkaStream;
-import kafka.consumer.ConsumerIterator;
+import kafka.consumer.*;
 import kafka.javaapi.producer.Producer;
 
 public class NileConsumer implements Runnable {
 
-  private KafkaStream stream;
-  private NileProducer producer;
+  private final KafkaStream stream;
+  private final INileProducer producer;
 
-  public NileConsumer(KafkaStream stream, NileProducer producer) {
+  public NileConsumer(KafkaStream stream, INileProducer producer) {
     this.stream = stream;
     this.producer = producer;
   }

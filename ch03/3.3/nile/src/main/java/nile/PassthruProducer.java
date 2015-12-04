@@ -2,16 +2,15 @@ package nile;
 
 import java.util.Properties;
 
-import kafka.producer.ProducerConfig;
-import kafka.producer.KeyedMessage;
+import kafka.producer.*;
 import kafka.javaapi.producer.Producer;
 
-public class NileProducer {
+public class PassthruProducer implements INileProducer {
 
-  private Producer<byte[], byte[]> producer;
-  private String topic;
+  private final Producer<byte[], byte[]> producer;
+  private final String topic;
 
-  public NileProducer(String brokers, String topic) {
+  public PassthruProducer(String brokers, String topic) {
     this.producer = new Producer<byte[], byte[]>(
       createConfig(brokers));
     this.topic = topic;
