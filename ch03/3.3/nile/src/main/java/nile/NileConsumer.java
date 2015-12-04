@@ -17,7 +17,7 @@ public class NileConsumer implements Runnable {
     while (true) {
       ConsumerIterator<byte[], byte[]> ci = stream.iterator();
       while (ci.hasNext()) {
-        this.producer.write(ci.next().message());
+        this.producer.process(ci.next().message());
       }
     }
   }

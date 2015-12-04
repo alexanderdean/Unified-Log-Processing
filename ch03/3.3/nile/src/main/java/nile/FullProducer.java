@@ -1,20 +1,26 @@
 package nile;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import kafka.producer.*;
 import kafka.javaapi.producer.Producer;
 
-/*
+import com.fasterxml.jackson.databind.*;
+import com.github.fge.jackson.JacksonUtils;
 
-public class NileProducer {
+import com.maxmind.geoip.LookupService;
 
-  private final Producer<byte[], byte[]> producer;
+public class FullProducer implements INileProducer {
+
+  private final Producer<byte[], String> producer;
   private final String goodTopic;
   private final String badTopic;
   private final LookupService maxmind;
 
-  public NileProducer(String brokers, String goodTopic,
+  protected static final ObjectMapper MAPPER = JacksonUtils.newMapper();
+
+  public FullProducer(String brokers, String goodTopic,
     String badTopic, LookupService maxmind) {
     this.producer = new Producer<byte[], String>(
       createConfig(brokers));
@@ -23,15 +29,25 @@ public class NileProducer {
     this.maxmind = maxmind;
   }
 
-  public void write(byte[] message) {
+  public void process(byte[] message) {
 
-    // First we validate the message
+    // Parse the message and check we can retrieve a 
+    try {
+      JsonNode node = MAPPER.readTree(message);
+      JsonNode ipAddress = node.path("customer").path("ipAddress");
+      if (ipAddress.isMissingNode()) {
+        write(this.badTopic, "customer.ipAddress property is missing");
+      } else {
+        String ip = ipAddress.getTextValue();
+      }
+    } catch (IOException e) {
+      // root.with("address").put("zip", 98040);
+    }
+  }
 
-    // Now we fetch the 
-
-
+  private void write(String topic, String message) {
     KeyedMessage<byte[], String> km = new KeyedMessage<byte[], String>(
-      this.goodTopic, message);
+      this.goodTopic, new String(message));
     this.producer.send(km);
   }
 
@@ -43,5 +59,3 @@ public class NileProducer {
     return new ProducerConfig(props);
   }
 }
-
-*/

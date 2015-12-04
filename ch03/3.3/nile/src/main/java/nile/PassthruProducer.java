@@ -16,7 +16,7 @@ public class PassthruProducer implements INileProducer {
     this.topic = topic;
   }
 
-  public void write(byte[] message) {
+  public void process(byte[] message) {
     KeyedMessage<byte[], byte[]> km = new KeyedMessage<byte[], byte[]>(
       this.topic, message);
     this.producer.send(km);

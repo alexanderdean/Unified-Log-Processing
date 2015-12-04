@@ -2,5 +2,5 @@ package nile;
 
 public interface INileProducer {
 
-  public void write(byte[] message);
+  public void process(byte[] message);
 }
