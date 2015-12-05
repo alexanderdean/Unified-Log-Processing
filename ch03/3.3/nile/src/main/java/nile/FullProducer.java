@@ -1,15 +1,15 @@
 package nile;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import kafka.producer.*;
 import kafka.javaapi.producer.Producer;
 
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jackson.JacksonUtils;
 
-import com.maxmind.geoip.LookupService;
+import com.maxmind.geoip.*;
 
 public class FullProducer implements INileProducer {
 
@@ -31,23 +31,26 @@ public class FullProducer implements INileProducer {
 
   public void process(byte[] message) {
 
-    // Parse the message and check we can retrieve a 
     try {
-      JsonNode node = MAPPER.readTree(message);
-      JsonNode ipAddress = node.path("customer").path("ipAddress");
-      if (ipAddress.isMissingNode()) {
-        write(this.badTopic, "customer.ipAddress property is missing");
+      JsonNode root = MAPPER.readTree(message);
+      JsonNode ipAddressNode = root.path("shopper").path("ipAddress");
+      if (ipAddressNode.isMissingNode()) {
+        write(this.badTopic, "{\"error\": \"shopper.ipAddress missing\"}");
       } else {
-        String ip = ipAddress.getTextValue();
+        String ipAddress = ipAddressNode.textValue();
+        Location country = maxmind.getLocation(ipAddress);
+        ((ObjectNode)root).with("shopper").put("country", country.countryName);
+        write(this.goodTopic, MAPPER.writeValueAsString(root));
       }
-    } catch (IOException e) {
-      // root.with("address").put("zip", 98040);
+    } catch (Exception e) {
+      write(this.badTopic, "{\"error\": \"" + e.getClass().getSimpleName() +
+        " processing JSON: " + e.getMessage() + "\"}");
     }
   }
 
   private void write(String topic, String message) {
     KeyedMessage<byte[], String> km = new KeyedMessage<byte[], String>(
-      this.goodTopic, new String(message));
+      topic, message);
     this.producer.send(km);
   }
 
