@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'                           // a
 
 mainClassName = 'nile.StreamApp'
 
@@ -11,22 +11,18 @@ repositories {
 
 version = '0.1.0'
 
-dependencies {
-  compile('org.apache.kafka:kafka_2.9.2:0.8.1.1') {
-    exclude group: 'javax.jms', module: 'jms'
-    exclude group: 'com.sun.jdmk', module: 'jmxtools'
-    exclude group: 'com.sun.jmx', module: 'jmxri'
-  }
+dependencies {                                        // b
+  compile 'org.apache.kafka:kafka-clients:0.9.0.0'
   compile 'com.maxmind.geoip:geoip-api:1.2.14'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
   compile 'org.slf4j:slf4j-api:1.7.5'
 }
 
-jar {
+jar {                                                 // c
   manifest {
     attributes 'Main-Class': mainClassName
   }
 
-  dependsOn configurations.compile
   from {
     configurations.compile.collect {
       it.isDirectory() ? it : zipTree(it)
