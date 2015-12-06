@@ -17,7 +17,7 @@ public class Consumer {
     this.topic = topic;
   }
 
-  public void run(INileProducer producer) {
+  public void run(IProducer producer) {
     this.consumer.subscribe(Arrays.asList(this.topic));
     while (true) {
       ConsumerRecords<byte[], byte[]> records = consumer.poll(100);
