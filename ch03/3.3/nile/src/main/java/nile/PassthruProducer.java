@@ -4,18 +4,16 @@ import org.apache.kafka.clients.producer.*;
 
 public class PassthruProducer implements IProducer {
 
-  private final KafkaProducer<byte[], String> producer;
+  private final KafkaProducer<String, String> producer;
   private final String topic;
 
-  public PassthruProducer(String brokers, String topic) {
+  public PassthruProducer(String servers, String topic) {
     this.producer = new KafkaProducer(
-      IProducer.createConfig(brokers));
+      IProducer.createConfig(servers));                             // a
     this.topic = topic;
   }
 
-  public void process(byte[] message) {
-    ProducerRecord<byte[], String> pr = new ProducerRecord<byte[], String>(
-      this.topic, new String(message));
-    this.producer.send(pr);
+  public void process(String message) {
+    IProducer.write(this.producer, this.topic, message);            // b
   }
 }

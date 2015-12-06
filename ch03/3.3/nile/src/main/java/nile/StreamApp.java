@@ -8,10 +8,10 @@ public class StreamApp {
 
   // wget "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
   // gunzip GeoLiteCity.dat.gz
-  // e.g. java -jar ./build/libs/nile-0.1.0.jar "127.0.0.1:2181" "localhost:9092" "stream-app-pt1" "raw-events" "enriched-events" "bad-events" "/tmp/GeoLiteCity.dat"
+  // e.g. java -jar ./build/libs/nile-0.1.0.jar "localhost:2181" "localhost:9092" "stream-app-pt1" "raw-events" "enriched-events" "bad-events" "/tmp/GeoLiteCity.dat"
   public static void main(String[] args) throws IOException {
-    String zookeeper = args[0];
-    String brokers = args[1];
+    String consumerServers = args[0];
+    String producerServers = args[1];
     String groupId = args[2];
     String inTopic = args[3];
     String goodTopic = args[4];
@@ -20,9 +20,10 @@ public class StreamApp {
       LookupService.GEOIP_MEMORY_CACHE);
 
     Consumer consumer = new Consumer(
-      zookeeper, groupId, inTopic);
-    PassthruProducer producer = new PassthruProducer(brokers, goodTopic);
-    //FullProducer producer = new FullProducer(brokers, goodTopic, badTopic, maxmind);
+      consumerServers, groupId, inTopic);
+    // PassthruProducer producer = new PassthruProducer(producerServers, goodTopic);
+    FullProducer producer = new FullProducer(
+      producerServers, goodTopic, badTopic, maxmind);
     consumer.run(producer);
   }
 }
