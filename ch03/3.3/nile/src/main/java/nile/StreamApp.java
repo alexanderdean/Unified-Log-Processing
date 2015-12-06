@@ -19,8 +19,7 @@ public class StreamApp {
     LookupService maxmind = new LookupService(args[6],
       LookupService.GEOIP_MEMORY_CACHE);
 
-    Consumer consumer = new Consumer(
-      consumerServers, groupId, inTopic);
+    Consumer consumer = new Consumer(consumerServers, groupId, inTopic);
     // PassthruProducer producer = new PassthruProducer(producerServers, goodTopic);
     FullProducer producer = new FullProducer(
       producerServers, goodTopic, badTopic, maxmind);
@@ -39,6 +38,27 @@ bin/kafka-console-consumer.sh --topic bad-events --from-beginning \
 
 bin/kafka-console-producer.sh --topic raw-events \
   --broker-list localhost:9092
+
+package nile;
+
+import java.io.IOException;
+
+public class StreamApp {
+
+  public static void main(String[] args) throws IOException {
+    String consumerServers = args[0];
+    String producerServers = args[1];
+    String groupId = args[2];
+    String inTopic = args[3];
+    String goodTopic = args[4];
+
+    Consumer consumer = new Consumer(
+      consumerServers, groupId, inTopic);
+    PassthruProducer producer = new PassthruProducer(producerServers, goodTopic);
+    consumer.run(producer);
+  }
+}
+
 
 
 */
