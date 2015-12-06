@@ -2,7 +2,7 @@ package nile;
 
 import java.util.Properties;
 
-public interface INileProducer {
+public interface IProducer {
 
   public void process(byte[] message);
 

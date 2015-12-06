@@ -2,14 +2,14 @@ package nile;
 
 import org.apache.kafka.clients.producer.*;
 
-public class PassthruProducer implements INileProducer {
+public class PassthruProducer implements IProducer {
 
   private final KafkaProducer<byte[], String> producer;
   private final String topic;
 
   public PassthruProducer(String brokers, String topic) {
     this.producer = new KafkaProducer(
-      INileProducer.createConfig(brokers));
+      IProducer.createConfig(brokers));
     this.topic = topic;
   }
 

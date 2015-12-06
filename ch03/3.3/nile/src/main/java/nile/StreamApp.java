@@ -19,11 +19,11 @@ public class StreamApp {
     LookupService maxmind = new LookupService(args[6],
       LookupService.GEOIP_MEMORY_CACHE);
 
-    NileConsumerGroup consumerGroup = new NileConsumerGroup(
+    Consumer consumer = new Consumer(
       zookeeper, groupId, inTopic);
     PassthruProducer producer = new PassthruProducer(brokers, goodTopic);
     //FullProducer producer = new FullProducer(brokers, goodTopic, badTopic, maxmind);
-    consumerGroup.run(producer);
+    consumer.run(producer);
   }
 }
 

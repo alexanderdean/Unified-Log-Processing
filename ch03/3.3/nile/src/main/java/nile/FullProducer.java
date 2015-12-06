@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import com.maxmind.geoip.*;
 
-public class FullProducer implements INileProducer {
+public class FullProducer implements IProducer {
 
   private final KafkaProducer<byte[], String> producer;
   private final String goodTopic;
@@ -19,7 +19,7 @@ public class FullProducer implements INileProducer {
   public FullProducer(String brokers, String goodTopic,
     String badTopic, LookupService maxmind) {
     this.producer = new KafkaProducer(
-      INileProducer.createConfig(brokers));
+      IProducer.createConfig(brokers));
     this.goodTopic = goodTopic;
     this.badTopic = badTopic;
     this.maxmind = maxmind;

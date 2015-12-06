@@ -4,12 +4,12 @@ import java.util.*;
 
 import org.apache.kafka.clients.consumer.*;
 
-public class NileConsumerGroup {
+public class Consumer {
 
   private final KafkaConsumer<byte[], byte[]> consumer;
   private final String topic;
 
-  public NileConsumerGroup(String zookeeper, String groupId,
+  public Consumer(String zookeeper, String groupId,
     String topic) {
 
     this.consumer = new KafkaConsumer<byte[], byte[]>(
