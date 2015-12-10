@@ -17,7 +17,7 @@ public class FullProducer implements IProducer {
   protected static final ObjectMapper MAPPER = new ObjectMapper();
 
   public FullProducer(String servers, String goodTopic,
-    String badTopic, LookupService maxmind) {
+    String badTopic, LookupService maxmind) {                          // a
     this.producer = new KafkaProducer(
       IProducer.createConfig(servers));
     this.goodTopic = goodTopic;
@@ -29,20 +29,23 @@ public class FullProducer implements IProducer {
 
     try {
       JsonNode root = MAPPER.readTree(message);
-      JsonNode ipAddressNode = root.path("shopper").path("ipAddress");
+      JsonNode ipAddressNode = root.path("shopper").path("ipAddress"); // b
       if (ipAddressNode.isMissingNode()) {
         IProducer.write(this.producer, this.badTopic,
-          "{\"error\": \"shopper.ipAddress missing\"}");
+          "{\"error\": \"shopper.ipAddress missing\"}");               // c
       } else {
         String ipAddress = ipAddressNode.textValue();
-        Location country = maxmind.getLocation(ipAddress);
-        ((ObjectNode)root).with("shopper").put("country", country.countryName);
+        Location location = maxmind.getLocation(ipAddress);            // d
+        ((ObjectNode)root).with("shopper").put(
+          "country", location.countryName);                            // e
+        ((ObjectNode)root).with("shopper").put(
+          "country", location.cityName);                               // e
         IProducer.write(this.producer, this.goodTopic,
-          MAPPER.writeValueAsString(root));
+          MAPPER.writeValueAsString(root));                            // f
       }
     } catch (Exception e) {
       IProducer.write(this.producer, this.badTopic, "{\"error\": \"" +
-        e.getClass().getSimpleName() + " thrown: " + e.getMessage() + "\"}");
+        e.getClass().getSimpleName() + ": " + e.getMessage() + "\"}"); // c
     }
   }
 }
