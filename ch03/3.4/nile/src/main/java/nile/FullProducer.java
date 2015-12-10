@@ -39,7 +39,7 @@ public class FullProducer implements IProducer {
         ((ObjectNode)root).with("shopper").put(
           "country", location.countryName);                            // e
         ((ObjectNode)root).with("shopper").put(
-          "country", location.cityName);                               // e
+          "city", location.city);                                      // e
         IProducer.write(this.producer, this.goodTopic,
           MAPPER.writeValueAsString(root));                            // f
       }
