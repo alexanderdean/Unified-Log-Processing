@@ -92,4 +92,3 @@ public class AbandonedCartStreamTask
     store.delete(asCartKey(shopper));
   }
 }
-

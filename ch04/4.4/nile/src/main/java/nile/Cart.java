@@ -1,4 +1,4 @@
-package nile.events;
+package nile;
 
 import java.io.IOException;
 
