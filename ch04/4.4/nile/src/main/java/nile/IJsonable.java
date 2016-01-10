@@ -8,13 +8,25 @@ public interface IJsonable {
     .registerModule(new Jdk8Module())
     .registerModule(new JavaTimeModule());
 
-  public String asJson() {
+  public static String asJson(Object o) {
     try {
       return MAPPER.writeValueAsString(this);
     } catch (IOException ioe) {
       throw new RuntimeException("Problem writing class as JSON", ioe);
+    }    
+  }
+
+  public static Object fromJson(String json, JavaType jt) {
+    try {
+      MAPPER.readValue(json, jt);
+    } catch (IOException | ProcessingException e) {
+      throw new RuntimeException("Problem creating class from JSON", ioe);
     }
   }
 
-  public IJsonable fromJson(String json);
+  public String asJson() {
+    asJson(this);
+  }
+
+  public static IJsonable fromJson(String json);
 }

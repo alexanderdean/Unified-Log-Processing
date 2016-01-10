@@ -22,7 +22,7 @@ public class AbandonedCartStreamTask
   @SuppressWarnings("unchecked")
   @Override
   public void process(IncomingMessageEnvelope envelope,
-    MessageCollector collector, TaskCoordinator coordinator) {
+    MessageCollector mc, TaskCoordinator tc) {
 
     String rawEvent = (String) envelope.getMessage();
     Event e = Event.fromJson(raw);
@@ -33,7 +33,8 @@ public class AbandonedCartStreamTask
 
       for (Item i : e.items) c.addItem(i);
 
-      store.put(asTimestampKey(e.shopper), timestamp);
+      store.put(asTimestampKey(e.shopper),
+        (LocalDateTime)IJsonable.asJson(timestamp));
       store.put(asCartKey(e.shopper), c.asJson());
     } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {
       resetShopper(e.shopper);
@@ -41,18 +42,21 @@ public class AbandonedCartStreamTask
   }
 
   @Override
-  public void window(MessageCollector collector,
-    TaskCoordinator coordinator) {
+  public void window(MessageCollector collector, TaskCoordinator tc) {
 
     KeyValueIterator<String, String> entries = store.all();
     while (entries.hasNext()) {
       Entry<String, String> entry = entries.next();
       String key = entry.getKey();
-      String value = entry.getValue();
-      if (isTimestampKey(key) && Cart.isAbandoned(value)) {
+      if (!isTimestampKey(key)) continue;
+
+      LocalDateTime timestamp = IJsonable.fromJson(entry.getValue(),
+        LocalDateTime.class);
+      if (Cart.isAbandoned(timestamp)) {
         String shopperId = extractShopperId(key);
-        String cart = store.get(asCartKey(shopper));
-        
+        String rawCart = store.get(asCartKey(shopperId));
+
+        Cart cart = Cart.fromJson(rawCart); 
         Shopper shopper = new Shopper(shopperId);
         Event event = new Event(shopper, "SHOPPER_ABANDONED_CART",
           cart.items);

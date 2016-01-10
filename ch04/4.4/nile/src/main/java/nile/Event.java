@@ -27,4 +27,8 @@ public class Event implements IJsonable {
     this(shopper, event, items,
       Optional.empty(), LocalDateTime.now(ZoneOffset.UTC));
   }
+
+  public static Event fromJson(String json) {
+    return IJsonable.fromJson(json, Event.class);
+  }
 }
