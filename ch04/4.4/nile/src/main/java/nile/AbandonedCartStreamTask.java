@@ -7,8 +7,7 @@ import org.apache.samza.storage.kv.*;
 import org.apache.samza.system.*;
 import org.apache.samza.task.*;
 
-import nile.events.AbandonedCartEvent;
-import nile.events.AbandonedCartEvent.DirectObject.Cart;
+import nile.entities.*;
 
 public class AbandonedCartStreamTask
   implements StreamTask, InitableTask, WindowableTask {
@@ -17,7 +16,7 @@ public class AbandonedCartStreamTask
 
   public void init(Config config, TaskContext context) {
     this.store = (KeyValueStore<String, String>)
-      context.getStore("nile-abandonedcart");
+      context.getStore("abandoned-cart-detector");
   }
 
   @SuppressWarnings("unchecked")
@@ -25,26 +24,23 @@ public class AbandonedCartStreamTask
   public void process(IncomingMessageEnvelope envelope,
     MessageCollector collector, TaskCoordinator coordinator) {
 
-    Map<String, Object> event =
-      (Map<String, Object>) envelope.getMessage();
-    String verb = (String) event.get("verb");
-    String shopper = (String) ((Map<String, Object>)
-      event.get("subject")).get("shopper");
-    
-    if (verb.equals("add")) {                                          // a
-      String timestamp = (String) ((Map<String, Object>)
-        event.get("context")).get("timestamp");
+    String rawEvent = (String) envelope.getMessage();
+    Event e = Event.fromJson(raw);
 
-      Map<String, Object> item = (Map<String, Object>)
-        ((Map<String, Object>) event.get("directObject")).get("item");
-      Cart cart = new Cart(store.get(asCartKey(shopper)));
-      cart.addItem(item);
+    if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {
 
-      store.put(asTimestampKey(shopper), timestamp);
-      store.put(asCartKey(shopper), cart.asJson());
+      String rawCart = store.get(asCartKey(e.shopper));
+      Cart c = Cart.fromJson(rawCart);
+
+      for (Item i : e.items) {
+        c.addItem(i);
+      }
+
+      store.put(asTimestampKey(e.shopper), timestamp);
+      store.put(asCartKey(e.shopper), c.asJson());
     
-    } else if (verb.equals("place")) {                                 // b
-      resetShopper(shopper);
+    } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {
+      resetShopper(e.shopper);
     }
   }
 
@@ -71,8 +67,8 @@ public class AbandonedCartStreamTask
     }
   }
 
-  private static String asTimestampKey(String shopper) {
-    return shopper + "-ts";
+  private static String asTimestampKey(Shopper shopper) {
+    return shopper.id + "-ts";
   }
 
   private static boolean isTimestampKey(String key) {
@@ -83,12 +79,12 @@ public class AbandonedCartStreamTask
     return key.substring(0, key.lastIndexOf('-'));
   }
 
-  private static String asCartKey(String shopper) {
-    return shopper + "-cart";
+  private static String asCartKey(Shopper shopper) {
+    return shopper.id + "-cart";
   }
 
-  private void resetShopper(String shopper) {
-    store.delete(asTimestampKey(shopper));
-    store.delete(asCartKey(shopper));
+  private void resetShopper(Shopper shopper) {
+    store.delete(asTimestampKey(shopper.id));
+    store.delete(asCartKey(shopper.id));
   }
 }

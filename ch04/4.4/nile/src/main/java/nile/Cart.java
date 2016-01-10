@@ -8,11 +8,7 @@ import org.joda.time.*;
 
 import org.codehaus.jackson.type.TypeReference;
 
-import nile.events.Event;
-
-import nile.events.AbandonedCartEvent.DirectObject.Cart;
-
-public class Cart {
+public class Cart implements IJsonable {
 
   public Item[] items;
 
@@ -26,20 +22,11 @@ public class Cart {
     this.items.add(item);
   }
 
-      public String asJson() {                                         // c
-        try {
-          return MAPPER.writeValueAsString(this.items);
-        } catch (IOException ioe) {
-          throw new RuntimeException("Problem writing JSON cart", ioe);
-        }
-      }
-
   public static boolean isAbandoned(String timestamp) {            // d
     DateTime ts = EVENT_DTF.parseDateTime(timestamp);
     DateTime cutoff = new DateTime(DateTimeZone.UTC)
       .minusSeconds(ABANDONED_AFTER_SECS);
     return ts.isBefore(cutoff);
   }
-    }
-  }
+
 }
