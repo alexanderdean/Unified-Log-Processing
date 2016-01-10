@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public interface Jsonable {
 
   static final ObjectMapper MAPPER = new ObjectMapper()
     .registerModule(new Jdk8Module())
-    .registerModule(new JSR310Module())
+    .registerModule(new JavaTimeModule())
     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);         // a   
 
   public static String asJson(Object o) {                             // b
