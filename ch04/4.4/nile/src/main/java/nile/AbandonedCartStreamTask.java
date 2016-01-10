@@ -1,7 +1,6 @@
 package nile;
 
-import java.util.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.apache.samza.config.Config;
 import org.apache.samza.storage.kv.*;
@@ -15,55 +14,53 @@ public class AbandonedCartStreamTask
 
   private KeyValueStore<String, String> store;
 
-  public void init(Config config, TaskContext context) {
+  public void init(Config config, TaskContext context) {          // a
     this.store = (KeyValueStore<String, String>)
       context.getStore("abandoned-cart-detector");
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void process(IncomingMessageEnvelope envelope,
-    MessageCollector mc, TaskCoordinator tc) {
+  @Override public void process(IncomingMessageEnvelope envelope,
+    MessageCollector mc, TaskCoordinator tc) {                    // b
 
     String rawEvent = (String) envelope.getMessage();
-    Event e = Event.fromJson(rawEvent);
+    Event e = Jsonable.fromJson(rawEvent, Event.class);
 
-    if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {
+    if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {           // c
       String rawCart = store.get(asCartKey(e.shopper.id));
-      Cart c = Cart.fromJson(rawCart);
+      Cart c = Jsonable.fromJson(rawCart, Cart.class);
 
       for (Item i : e.items) c.addItem(i);
 
-      store.put(asTimestampKey(e.shopper.id), IJsonable.asJson(e.timestamp));
+      store.put(asTimestampKey(e.shopper.id),
+        Jsonable.asJson(e.timestamp));
       store.put(asCartKey(e.shopper.id), c.asJson());
-    } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {
-      resetShopper(e.shopper);
+    } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {          // d
+      resetShopper(e.shopper.id);
     }
   }
 
-  @Override
-  public void window(MessageCollector collector, TaskCoordinator tc) {
+  @Override public void window(MessageCollector coll,
+    TaskCoordinator tc) {                                         // e
 
     KeyValueIterator<String, String> entries = store.all();
-    while (entries.hasNext()) {
+    while (entries.hasNext()) {                                   // f
       Entry<String, String> entry = entries.next();
       String key = entry.getKey();
-      if (!isTimestampKey(key)) continue;
+      if (!isTimestampKey(key)) continue;                         // f
 
-      LocalDateTime timestamp = (LocalDateTime) IJsonable.fromJson(
-        entry.getValue(), LocalDateTime.class);
-      if (Cart.isAbandoned(timestamp)) {
+      Instant timestamp = Jsonable.fromJson(
+        entry.getValue(), Instant.class);
+      if (Cart.isAbandoned(timestamp)) {                          // g
         String shopperId = extractShopperId(key);
         String rawCart = store.get(asCartKey(shopperId));
 
-        Cart cart = IJsonable.fromJson(rawCart, Cart.class); 
-        Shopper shopper = new Shopper(shopperId);
-        Event event = new Event(shopper, "SHOPPER_ABANDONED_CART",
-          cart.items);
-        collector.send(new OutgoingMessageEnvelope(
+        Cart cart = Jsonable.fromJson(rawCart, Cart.class);
+        Event event = new Event(new Shopper(shopperId),
+          "SHOPPER_ABANDONED_CART", cart.items);                  // h
+        coll.send(new OutgoingMessageEnvelope(
           new SystemStream("kafka", "derived-events"), event.asJson()));
         
-        resetShopper(shopper);
+        resetShopper(shopperId);
       }
     }
   }
@@ -76,7 +73,7 @@ public class AbandonedCartStreamTask
     return key.endsWith("-ts");
   }
 
-  private static String extractShopperId(String key) {
+  private static String extractShopperId(String key) {            // i
     return key.substring(0, key.lastIndexOf('-'));
   }
 
@@ -84,8 +81,8 @@ public class AbandonedCartStreamTask
     return shopperId + "-cart";
   }
 
-  private void resetShopper(Shopper shopper) {
-    store.delete(asTimestampKey(shopper.id));
-    store.delete(asCartKey(shopper.id));
+  private void resetShopper(String shopperId) {
+    store.delete(asTimestampKey(shopperId));
+    store.delete(asCartKey(shopperId));
   }
 }

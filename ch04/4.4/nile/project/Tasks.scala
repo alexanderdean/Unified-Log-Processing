@@ -8,8 +8,6 @@ import xerial.sbt.Pack._
 
 object Tasks {
 
-  import Dependencies._
-
   private object RenderConfigTask {
     val key = TaskKey[Unit]("renderConfig", "Samza: renders the config file template", rank = KeyRanks.ATask)
     val setting = key := {
@@ -34,9 +32,9 @@ object Tasks {
   private object GetSamzaShellTask {
     val key = TaskKey[File]("getSamzaShell", "Samza: sources the samza-shell artifact", rank = KeyRanks.ATask)
     val setting = key := {
-      val samzaShellFile = (target in Compile).value / s"samza-shell-${V.samza}-dist.tgz"
+      val samzaShellFile = (target in Compile).value / s"samza-shell-0.9.1-dist.tgz"
       if (! samzaShellFile.exists)
-        url(s"http://repo1.maven.org/maven2/org/apache/samza/samza-shell/${V.samza}/${samzaShellFile.name}") #> samzaShellFile !
+        url(s"http://repo1.maven.org/maven2/org/apache/samza/samza-shell/0.9.1/${samzaShellFile.name}") #> samzaShellFile !
 
       samzaShellFile
     }

@@ -11,20 +11,21 @@ public class Event implements Jsonable {
   public String event;
   public List<Item> items;
   public Optional<Order> order;
-  public LocalDateTime timestamp;
+  public Instant timestamp;
 
-  public Event(Shopper shopper, String event, List<Item> items,
-    Optional<Order> order, LocalDateTime timestamp) {
-
-    this.shopper = shopper;
-    this.event = event;
-    this.items = items;
-    this.order = order;
-    this.timestamp = timestamp;
+  public Event() {
+    this.shopper = null;
+    this.event = null;
+    this.items = Collections.emptyList();
+    this.order = Optional.empty();
+    this.timestamp = null;
   }
 
   public Event(Shopper shopper, String event, List<Item> items) {
-    this(shopper, event, items,
-      Optional.empty(), LocalDateTime.now(ZoneOffset.UTC));
+    this.shopper = shopper;
+    this.event = event;
+    this.items = items;
+    this.order = Optional.empty();
+    this.timestamp = Instant.now();
   }
 }
