@@ -25,4 +25,5 @@ lazy val root = (project in file(".")).
       "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.4"
     )
   ).
-  settings(packAutoSettings: _*)
+  settings(packAutoSettings: _*).
+  settings(samzaTasks: _*)

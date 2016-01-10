@@ -69,7 +69,7 @@ object Tasks {
     }
   }
 
-  lazy val tasks = Seq(
+  lazy val samzaTasks = Seq(
     RenderConfigTask.setting,
     GetSamzaShellTask.setting,
     ExtractSamzaShellTask.setting,
