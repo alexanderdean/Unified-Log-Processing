@@ -1,9 +1,7 @@
 package nile;
 
-import org.joda.time.*;
-import org.joda.time.format.*;
-
-import org.codehaus.jackson.map.ObjectMapper;
+import java.time.*;
+import java.util.Optional;
 
 import nile.entities.*;
 
@@ -11,17 +9,22 @@ public class Event implements IJsonable {
 
   public Shopper shopper;
   public String event;
-  public Item[] items;
+  public List<Item> items;
   public Optional<Order> order;
-  public DateTime timestamp;
+  public LocalDateTime timestamp;
 
-  public Event(Shopper shopper, String event, Item[] items,
-    Optional<Order> order, DateTime timestamp) {
+  public Event(Shopper shopper, String event, List<Item> items,
+    Optional<Order> order, LocalDateTime timestamp) {
 
     this.shopper = shopper;
     this.event = event;
     this.items = items;
     this.order = order;
     this.timestamp = timestamp;
+  }
+
+  public Event(Shopper shopper, String event, List<Item> items) {
+    this(shopper, event, items,
+      Optional.empty(), LocalDateTime.now(ZoneOffset.UTC));
   }
 }

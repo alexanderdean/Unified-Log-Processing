@@ -28,17 +28,13 @@ public class AbandonedCartStreamTask
     Event e = Event.fromJson(raw);
 
     if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {
-
       String rawCart = store.get(asCartKey(e.shopper));
       Cart c = Cart.fromJson(rawCart);
 
-      for (Item i : e.items) {
-        c.addItem(i);
-      }
+      for (Item i : e.items) c.addItem(i);
 
       store.put(asTimestampKey(e.shopper), timestamp);
       store.put(asCartKey(e.shopper), c.asJson());
-    
     } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {
       resetShopper(e.shopper);
     }
@@ -49,18 +45,19 @@ public class AbandonedCartStreamTask
     TaskCoordinator coordinator) {
 
     KeyValueIterator<String, String> entries = store.all();
-    while (entries.hasNext()) {                                        // c
+    while (entries.hasNext()) {
       Entry<String, String> entry = entries.next();
       String key = entry.getKey();
       String value = entry.getValue();
-      if (isTimestampKey(key) && Cart.isAbandoned(value)) {            // d
-        String shopper = extractShopper(key);
+      if (isTimestampKey(key) && Cart.isAbandoned(value)) {
+        String shopperId = extractShopperId(key);
         String cart = store.get(asCartKey(shopper));
         
-        AbandonedCartEvent event =
-          new AbandonedCartEvent(shopper, cart);
+        Shopper shopper = new Shopper(shopperId);
+        Event event = new Event(shopper, "SHOPPER_ABANDONED_CART",
+          cart.items);
         collector.send(new OutgoingMessageEnvelope(
-          new SystemStream("kafka", "nile-derivedevents"), event));    // e
+          new SystemStream("kafka", "derived-events"), event.asJson()));
         
         resetShopper(shopper);
       }
@@ -75,7 +72,7 @@ public class AbandonedCartStreamTask
     return key.endsWith("-ts");
   }
 
-  private static String extractShopper(String key) {                   // f
+  private static String extractShopperId(String key) {
     return key.substring(0, key.lastIndexOf('-'));
   }
 

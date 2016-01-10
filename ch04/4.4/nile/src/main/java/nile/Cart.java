@@ -1,32 +1,25 @@
 package nile;
 
-import java.io.IOException;
-
-import java.util.*;
-
-import org.joda.time.*;
-
-import org.codehaus.jackson.type.TypeReference;
+import java.time.*;
+// import java.util.*;
 
 public class Cart implements IJsonable {
 
-  public Item[] items;
+  public List<Item> items;
 
   private static final int ABANDONED_AFTER_SECS = 1800;            // a
 
-  public Cart(Item[] items) {
+  public Cart(List<Item> items) {
     this.items = items;
   }
 
-  public void addItem(Map<String, Object> item) {                  // b
+  public void addItem(Item item) {                  // b
     this.items.add(item);
   }
 
-  public static boolean isAbandoned(String timestamp) {            // d
-    DateTime ts = EVENT_DTF.parseDateTime(timestamp);
-    DateTime cutoff = new DateTime(DateTimeZone.UTC)
+  public static boolean isAbandoned(LocalDateTime timestamp) {            // d
+    DateTime cutoff = LocalDateTime.now(ZoneOffset.UTC)
       .minusSeconds(ABANDONED_AFTER_SECS);
-    return ts.isBefore(cutoff);
+    return timestamp.isBefore(cutoff);
   }
-
 }
