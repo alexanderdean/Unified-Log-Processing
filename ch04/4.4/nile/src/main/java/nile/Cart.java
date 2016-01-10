@@ -24,10 +24,6 @@ public class Cart implements IJsonable {
   }
 
   public static Cart fromJson(String json) {
-    return IJsonable.
-  }
-
-  public static Cart fromJson(String json) {
     return IJsonable.fromJson(json, Cart.class);
   }
 }

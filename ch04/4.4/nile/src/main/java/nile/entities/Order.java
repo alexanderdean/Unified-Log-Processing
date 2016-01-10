@@ -1,6 +1,6 @@
 package nile.entities;
 
-public static class Order {
+public class Order {
 
   public final String id;
   public final Double value;

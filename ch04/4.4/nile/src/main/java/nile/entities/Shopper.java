@@ -2,7 +2,7 @@ package nile.entities;
 
 import java.util.Optional;
 
-public static class Shopper {
+public class Shopper {
 
   public final String id;
   public final Optional<String> name;

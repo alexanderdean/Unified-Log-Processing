@@ -1,6 +1,6 @@
 package nile.entities;
 
-public static class Product {
+public class Product {
 
   public final String sku;
   public final String name;
