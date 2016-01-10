@@ -7,8 +7,6 @@ object Dependencies {
     val samza      = "0.9.1"
     val slf4j      = "1.7.7"
     val kafka      = "0.8.2.1"
-    val json4s     = "3.2.11"
-    val jodaTime   = "2.3"
   }
 
   object Libraries {
@@ -26,8 +24,8 @@ object Dependencies {
     val sl4fjLog4j12   = "org.slf4j"         %  "slf4j-log4j12"    % V.slf4j
 
     val kafka          = "org.apache.kafka"  %% "kafka"            % V.kafka
-    val json4sJackson  = "org.json4s"        %% "json4s-jackson"   % V.json4s
-    val json4sExt      = "org.json4s"        %% "json4s-ext"       % V.json4s
-    val jodaTime       = "joda-time"         %  "joda-time"        % V.jodaTime
+    val jackson        = "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3"
+    val jacksonJava8   = "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.5.1"
+    val jacksonDates   = "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.4"
   }
 }

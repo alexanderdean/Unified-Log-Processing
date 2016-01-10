@@ -5,7 +5,7 @@ import java.util.List;
 
 import nile.entities.*;
 
-public class Cart implements IJsonable {
+public class Cart implements Jsonable {
 
   public List<Item> items;
 
@@ -19,13 +19,9 @@ public class Cart implements IJsonable {
     this.items.add(item);
   }
 
-  public static boolean isAbandoned(LocalDateTime timestamp) {
-    DateTime cutoff = LocalDateTime.now(ZoneOffset.UTC)
+  public static Boolean isAbandoned(LocalDateTime timestamp) {
+    LocalDateTime cutoff = LocalDateTime.now(ZoneOffset.UTC)
       .minusSeconds(ABANDONED_AFTER_SECS);
     return timestamp.isBefore(cutoff);
-  }
-
-  public static Cart fromJson(String json) {
-    return IJsonable.fromJson(json, Cart.class);
   }
 }

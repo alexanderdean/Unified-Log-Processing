@@ -5,7 +5,7 @@ import java.util.*;
 
 import nile.entities.*;
 
-public class Event implements IJsonable {
+public class Event implements Jsonable {
 
   public Shopper shopper;
   public String event;
@@ -26,9 +26,5 @@ public class Event implements IJsonable {
   public Event(Shopper shopper, String event, List<Item> items) {
     this(shopper, event, items,
       Optional.empty(), LocalDateTime.now(ZoneOffset.UTC));
-  }
-
-  public static Event fromJson(String json) {
-    return IJsonable.fromJson(json, Event.class);
   }
 }

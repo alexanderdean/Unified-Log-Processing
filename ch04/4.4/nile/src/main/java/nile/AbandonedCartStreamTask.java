@@ -1,6 +1,7 @@
 package nile;
 
 import java.util.*;
+import java.time.LocalDateTime;
 
 import org.apache.samza.config.Config;
 import org.apache.samza.storage.kv.*;
@@ -25,17 +26,16 @@ public class AbandonedCartStreamTask
     MessageCollector mc, TaskCoordinator tc) {
 
     String rawEvent = (String) envelope.getMessage();
-    Event e = Event.fromJson(raw);
+    Event e = Event.fromJson(rawEvent);
 
     if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {
-      String rawCart = store.get(asCartKey(e.shopper));
+      String rawCart = store.get(asCartKey(e.shopper.id));
       Cart c = Cart.fromJson(rawCart);
 
       for (Item i : e.items) c.addItem(i);
 
-      store.put(asTimestampKey(e.shopper),
-        (LocalDateTime)IJsonable.asJson(timestamp));
-      store.put(asCartKey(e.shopper), c.asJson());
+      store.put(asTimestampKey(e.shopper.id), IJsonable.asJson(e.timestamp));
+      store.put(asCartKey(e.shopper.id), c.asJson());
     } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {
       resetShopper(e.shopper);
     }
@@ -50,13 +50,13 @@ public class AbandonedCartStreamTask
       String key = entry.getKey();
       if (!isTimestampKey(key)) continue;
 
-      LocalDateTime timestamp = IJsonable.fromJson(entry.getValue(),
-        LocalDateTime.class);
+      LocalDateTime timestamp = (LocalDateTime) IJsonable.fromJson(
+        entry.getValue(), LocalDateTime.class);
       if (Cart.isAbandoned(timestamp)) {
         String shopperId = extractShopperId(key);
         String rawCart = store.get(asCartKey(shopperId));
 
-        Cart cart = Cart.fromJson(rawCart); 
+        Cart cart = IJsonable.fromJson(rawCart, Cart.class); 
         Shopper shopper = new Shopper(shopperId);
         Event event = new Event(shopper, "SHOPPER_ABANDONED_CART",
           cart.items);
@@ -68,8 +68,8 @@ public class AbandonedCartStreamTask
     }
   }
 
-  private static String asTimestampKey(Shopper shopper) {
-    return shopper.id + "-ts";
+  private static String asTimestampKey(String shopperId) {
+    return shopperId + "-ts";
   }
 
   private static boolean isTimestampKey(String key) {
@@ -80,8 +80,8 @@ public class AbandonedCartStreamTask
     return key.substring(0, key.lastIndexOf('-'));
   }
 
-  private static String asCartKey(Shopper shopper) {
-    return shopper.id + "-cart";
+  private static String asCartKey(String shopperId) {
+    return shopperId + "-cart";
   }
 
   private void resetShopper(Shopper shopper) {

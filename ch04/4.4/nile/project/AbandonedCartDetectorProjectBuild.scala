@@ -28,9 +28,9 @@ object AbandonedCartDetectorProjectBuild extends Build {
         Libraries.sl4fjApi,
         Libraries.sl4fjLog4j12,
         Libraries.kafka,
-        Libraries.json4sJackson,
-        Libraries.json4sExt,
-        Libraries.jodaTime
+        Libraries.jackson,
+        Libraries.jacksonJava8,
+        Libraries.jacksonDates
       )
     )
 }
