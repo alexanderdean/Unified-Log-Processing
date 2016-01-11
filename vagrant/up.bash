@@ -40,6 +40,11 @@ while read pb; do
     su - -c "source ${env_setup} && ${vagrant_dir}/ansible/bin/ansible-playbook ${vagrant_dir}/${pb} --connection=local --inventory-file=${hosts}" vagrant
 done <${vagrant_dir}/up.playbooks
 
+echo "=========================================="
+echo "RUNNING THE SAMZA GRID SCRIPT"
+echo "------------------------------------------"
+${vagrant_dir}/grid bootstrap
+
 guidance=${vagrant_dir}/up.guidance
 
 if [ -f ${guidance} ]; then
