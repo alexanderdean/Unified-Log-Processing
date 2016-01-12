@@ -1,6 +1,7 @@
 package nile;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.apache.samza.config.Config;
 import org.apache.samza.storage.kv.*;
@@ -26,8 +27,11 @@ public class AbandonedCartStreamTask
     Event e = Jsonable.fromJson(rawEvent, Event.class);
 
     if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {           // c
-      String rawCart = store.get(asCartKey(e.shopper.id));
-      Cart c = Jsonable.fromJson(rawCart, Cart.class);
+      Optional<String> rawCart = Optional.ofNullable(
+        store.get(asCartKey(e.shopper.id)));
+      Cart c = rawCart
+        .map(rc -> Jsonable.fromJson(rc, Cart.class))
+        .orElse(new Cart());
 
       for (Item i : e.items) c.addItem(i);
 

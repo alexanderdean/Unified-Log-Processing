@@ -1,19 +1,15 @@
 package nile;
 
 import java.time.*;
-import java.util.List;
+import java.util.*;
 
 import nile.entities.*;
 
 public class Cart implements Jsonable {
 
-  public List<Item> items;
+  public List<Item> items = new ArrayList<Item>();
 
   private static final int ABANDONED_AFTER_SECS = 1800;       // a
-
-  public Cart(List<Item> items) {
-    this.items = items;
-  }
 
   public void addItem(Item item) {                            // b
     this.items.add(item);
