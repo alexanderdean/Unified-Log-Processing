@@ -1,5 +1,3 @@
-import Tasks._
-
 lazy val root = (project in file(".")).
   settings(
     name          := "abandoned-cart-detector",
@@ -26,4 +24,4 @@ lazy val root = (project in file(".")).
     )
   ).
   settings(packAutoSettings: _*).
-  settings(samzaTasks: _*)
+  settings(SamzaTasks.tasks: _*)

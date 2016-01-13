@@ -6,7 +6,7 @@ import Keys._
 
 import xerial.sbt.Pack._
 
-object Tasks {
+object SamzaTasks {
 
   private object RenderConfigTask {
     val key = TaskKey[Unit]("renderConfig", "Samza: renders the config file template", rank = KeyRanks.ATask)
@@ -69,7 +69,7 @@ object Tasks {
     }
   }
 
-  lazy val samzaTasks = Seq(
+  lazy val tasks = Seq(
     RenderConfigTask.setting,
     GetSamzaShellTask.setting,
     ExtractSamzaShellTask.setting,
