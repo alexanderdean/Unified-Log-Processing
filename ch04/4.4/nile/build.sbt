@@ -18,9 +18,9 @@ lazy val root = (project in file(".")).
       "org.slf4j"         %  "slf4j-api"        % "1.7.7",
       "org.slf4j"         %  "slf4j-log4j12"    % "1.7.7",
       "org.apache.kafka"  %% "kafka"            % "0.8.2.1",
-      "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.6.3",
-      "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.5.1",
-      "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.6.4"
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.3",
+      "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % "2.5.1",
+      "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" %"2.6.4"
     )
   ).
   settings(packAutoSettings: _*).
