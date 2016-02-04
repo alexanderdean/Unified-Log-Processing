@@ -9,7 +9,7 @@ Assuming git, **[Vagrant] [vagrant-install]** and **[VirtualBox] [virtualbox-ins
 
 ```bash
  host$ git clone https://github.com/alexanderdean/Unified-Log-Processing.git
- host$ cd snowplow
+ host$ cd Unified-Log-Processing
  host$ vagrant up && vagrant ssh
 guest$ cd /vagrant/ch02/2.1/hellocalculator
 guest$ gradle test
