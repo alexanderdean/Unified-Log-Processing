@@ -24,23 +24,32 @@ public class AbandonedCartStreamTask
     MessageCollector mc, TaskCoordinator tc) {                    // b
 
     String rawEvent = (String) envelope.getMessage();
-    Event e = Jsonable.fromJson(rawEvent, Event.class);
 
-    if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {           // c
-      Optional<String> rawCart = Optional.ofNullable(
-        store.get(asCartKey(e.shopper.id)));
-      Cart c = rawCart
-        .map(rc -> Jsonable.fromJson(rc, Cart.class))
-        .orElse(new Cart());
+	try {
 
-      for (Item i : e.items) c.addItem(i);
+      Event e = Jsonable.fromJson(rawEvent, Event.class);
 
-      store.put(asTimestampKey(e.shopper.id),
-        Jsonable.asJson(e.timestamp));
-      store.put(asCartKey(e.shopper.id), c.asJson());
-    } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {          // d
-      resetShopper(e.shopper.id);
-    }
+      if (e.event.equals("SHOPPER_ADDED_ITEM_TO_CART")) {           // c
+        Optional<String> rawCart = Optional.ofNullable(
+          store.get(asCartKey(e.shopper.id)));
+        Cart c = rawCart
+          .map(rc -> Jsonable.fromJson(rc, Cart.class))
+          .orElse(new Cart());
+
+        for (Item i : e.items) c.addItem(i);
+
+        store.put(asTimestampKey(e.shopper.id),
+          Jsonable.asJson(e.timestamp));
+        store.put(asCartKey(e.shopper.id), c.asJson());
+      } else if (e.event.equals("SHOPPER_PLACED_ORDER")) {          // d
+        resetShopper(e.shopper.id);
+      }
+
+	} catch (Exception e) {
+      //mc.send(new OutgoingMessageEnvelope(
+      //  new SystemStream("kafka", "bad-events"), rawEvent));
+	}
+
   }
 
   @Override public void window(MessageCollector coll,
