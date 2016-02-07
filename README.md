@@ -11,8 +11,6 @@ Assuming git, **[Vagrant] [vagrant-install]** and **[VirtualBox] [virtualbox-ins
  host$ git clone https://github.com/alexanderdean/Unified-Log-Processing.git
  host$ cd Unified-Log-Processing
  host$ vagrant up && vagrant ssh
-guest$ cd /vagrant/ch02/2.1/hellocalculator
-guest$ gradle test
 ```
 
 [ulp]: http://manning.com/dean/
