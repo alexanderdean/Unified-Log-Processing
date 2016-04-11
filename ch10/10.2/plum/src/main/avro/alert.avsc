@@ -1,0 +1,40 @@
+{ "name": "Alert",
+  "namespace": "plum.avro",
+  "type": "record",
+  "fields": [
+    { "name": "notification",
+      "type": {
+        "name": "Notification",
+        "namespace": "plum.avro",
+        "type": "record",
+        "fields": [
+          { "name": "summary", "type": "string" },
+          { "name": "detail", "type": "string" },
+          { "name": "urgency",
+            "type": {
+              "name": "Urgency",
+              "namespace": "plum.avro",
+              "type": "enum",
+              "symbols": ["HIGH", "MEDIUM", "LOW"]
+            }
+          }
+
+        ]
+      }
+    },
+
+    { "name": "recipient",
+      "type": {
+        "name": "Recipient",
+        "namespace": "plum.avro",
+        "type": "record",
+        "fields": [
+          { "name": "name", "type": "string" },
+          { "name": "phone", "type": "string" },
+          { "name": "email", "type": "string" }
+        ]
+      }
+    },
+    { "name": "createdAt", "type": "long" }
+  ]
+}
