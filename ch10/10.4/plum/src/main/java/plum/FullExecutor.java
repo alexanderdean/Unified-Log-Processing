@@ -11,7 +11,7 @@ import org.apache.avro.specific.SpecificDatumReader;
 
 import plum.avro.Alert;
 
-public class EchoExecutor implements IExecutor {
+public class FullExecutor implements IExecutor {
 
   private final KafkaProducer<String, String> producer;
   private final String eventsTopic;
@@ -26,7 +26,7 @@ public class EchoExecutor implements IExecutor {
     }
   }
 
-  public EchoExecutor(String servers, String eventsTopic) {
+  public FullExecutor(String servers, String eventsTopic) {
 
     this.producer = new KafkaProducer(
       IExecutor.createConfig(servers));
@@ -44,6 +44,9 @@ public class EchoExecutor implements IExecutor {
       Alert alert = reader.read(null, decoder);
       System.out.println("Alert " + alert.recipient.name + " about " +
         alert.notification.summary);
+      Emailer.send(alert);                                            // a
+      IExecutor.write(this.producer, this.eventsTopic,
+        "{ \"event\": \"email_sent\" }");                             // b
     } catch (IOException | AvroTypeException e) {
       System.out.println("Error executing command:" + e.getMessage());
     }

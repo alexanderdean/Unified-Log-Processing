@@ -11,7 +11,7 @@ public class ExecutorApp {
     String eventsTopic   = args[3];
 
     Consumer consumer = new Consumer(servers, groupId, commandsTopic);
-    EchoExecutor executor = new EchoExecutor(servers, eventsTopic);
+    FullExecutor executor = new FullExecutor(servers, eventsTopic);
     consumer.run(executor);
   }
 }

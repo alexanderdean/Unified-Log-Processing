@@ -2,7 +2,7 @@
   "namespace": "plum.avro",
   "type": "record",
   "fields": [
-    { "name": "type", "type": "string" },
+    { "name": "command", "type": "string" },
     { "name": "notification",
       "type": {
         "name": "Notification",
