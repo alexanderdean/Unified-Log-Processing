@@ -42,8 +42,6 @@ public class FullExecutor implements IExecutor {
       Decoder decoder = DecoderFactory.get().jsonDecoder(schema, din);
       DatumReader<Alert> reader = new SpecificDatumReader<Alert>(schema);
       Alert alert = reader.read(null, decoder);
-      System.out.println("Alert " + alert.recipient.name + " about " +
-        alert.notification.summary);
       Emailer.send(alert);                                            // a
       IExecutor.write(this.producer, this.eventsTopic,
         "{ \"event\": \"email_sent\" }");                             // b
