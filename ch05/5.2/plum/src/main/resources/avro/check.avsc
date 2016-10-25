@@ -1,0 +1,20 @@
+{ "name": "Check",
+  "namespace": "plum.avro",
+  "type": "record",
+  "fields": [
+    { "name": "factory", "type": "string" },
+    { "name": "serialNumber", "type": "string" },
+    { "name": "status",
+      "type": {
+        "type": "enum", "namespace": "plum.avro", "name": "StatusEnum",
+        "symbols": ["STARTING", "RUNNING", "SHUTTING_DOWN"]
+      }
+    },
+    { "name": "lastStartedAt", "type": "long",
+      "logicalType": "timestamp-millis" },
+    { "name": "temperature", "type": "float" },
+    { "name": "endOfLife", "type": "boolean" },
+    { "name": "floorNumber", "type": ["null", "int"] }
+  ]
+}
+
