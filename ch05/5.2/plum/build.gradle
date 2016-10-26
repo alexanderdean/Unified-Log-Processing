@@ -19,6 +19,9 @@ dependencies {
   compile 'org.apache.avro:avro:1.8.1'                         // b
 }
 
+avro {
+    stringType = "Utf8"
+}
 
 jar {
   manifest {
