@@ -1,0 +1,13 @@
+# Gradle Files #
+################
+.gradle
+.m2
+
+# Build output directies
+/target
+*/target
+/build
+*/build
+
+# Samza deploy
+deploy
