@@ -27,7 +27,7 @@ under the License.
 
   <groupId>org.apache.samza</groupId>
   <artifactId>nile-carts</artifactId>
-  <version>0.13.0</version>
+  <version>0.14.0</version>
   <packaging>jar</packaging>
   <name>Samza Example</name>
   <description>
@@ -143,8 +143,8 @@ under the License.
   <properties>
     <!-- maven specific properties -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <samza.version>0.13.0</samza.version>
-    <hadoop.version>2.6.1</hadoop.version>
+    <samza.version>0.14.0</samza.version>
+    <hadoop.version>2.6.5</hadoop.version>
   </properties>
 
   <developers>
