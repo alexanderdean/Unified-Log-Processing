@@ -99,9 +99,9 @@ start_all() {
 }
 
 start_zookeeper() {
-  if [ -f $DEPLOY_ROOT_DIR/$SYSTEM/bin/zookeeper-server-start.sh ]; then
+  if [ -f $DEPLOY_ROOT_DIR/$SYSTEM/bin/bin/zkServer.sh ]; then
     cd $DEPLOY_ROOT_DIR/$SYSTEM
-    bin/zookeeper-server-start.sh config/zookeeper.properties > logs/zookeeper.log 2>&1 &
+    bin/zkServer.sh start config/zookeeper.properties > logs/zookeeper.log 2>&1 &
     cd - > /dev/null
   else
     echo 'Zookeeper is not installed. Run: bin/grid install zookeeper'
@@ -135,9 +135,9 @@ stop_all() {
 }
 
 stop_zookeeper() {
-  if [ -f $DEPLOY_ROOT_DIR/$SYSTEM/bin/zookeeper-server-stop.sh ]; then
+  if [ -f $DEPLOY_ROOT_DIR/$SYSTEM/bin/bin/zkServer.sh ]; then
     cd $DEPLOY_ROOT_DIR/$SYSTEM
-    bin/zookeeper-server-stop.sh
+    bin/zkServer.sh stop
     cd - > /dev/null
   else
     echo 'Zookeeper is not installed. Run: bin/grid install zookeeper'
