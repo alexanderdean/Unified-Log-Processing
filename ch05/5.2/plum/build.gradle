@@ -1,5 +1,5 @@
 plugins {                                                      // a
-  id "com.commercehub.gradle.plugin.avro" version "0.8.0"
+  id "com.commercehub.gradle.plugin.avro" version "0.9.1"
 }
 
 apply plugin: 'java'
@@ -16,7 +16,7 @@ repositories {
 version = '0.1.0'
 
 dependencies {
-  compile 'org.apache.avro:avro:1.8.1'                         // b
+  compile 'org.apache.avro:avro:1.8.2'                         // b
 }
 
 avro {
