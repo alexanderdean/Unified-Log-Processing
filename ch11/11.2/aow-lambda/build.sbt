@@ -4,16 +4,17 @@ lazy val root = (project in file(".")).
   settings(
     name := "aow-lambda",
     version := "0.1.0",
-    scalaVersion := "2.11.6", // a
+    scalaVersion := "2.12.7", // a
     retrieveManaged := true,
-    libraryDependencies += "com.amazonaws" % "aws-lambda-java-core"       % "1.0.0",
-    libraryDependencies += "com.amazonaws" % "aws-lambda-java-events"     % "1.0.0",
-    libraryDependencies += "com.amazonaws" % "aws-java-sdk"               % "1.9.34" % "provided", // b
-    libraryDependencies += "com.amazonaws" % "aws-java-sdk-core"          % "1.9.34" % "provided", // b
-    libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.11" % "2.5.2",
-    libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11",
-    libraryDependencies += "org.json4s" %% "json4s-ext" % "3.2.11",
-    libraryDependencies += "com.github.seratch" %% "awscala" % "0.5.+"
+    libraryDependencies += "com.amazonaws" % "aws-lambda-java-core"       % "1.2.0",
+    libraryDependencies += "com.amazonaws" % "aws-lambda-java-events"     % "2.2.4",
+    libraryDependencies += "com.amazonaws" % "aws-java-sdk"               % "1.11.473" % "provided", // b
+    libraryDependencies += "com.amazonaws" % "aws-java-sdk-core"          % "1.11.473" % "provided", // b
+    libraryDependencies += "com.amazonaws" % "aws-java-sdk-kinesis"       % "1.11.473" % "compile", // b
+    libraryDependencies += "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % "2.8.4",
+    libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.6.2",
+    libraryDependencies += "org.json4s" %% "json4s-ext" % "3.6.2",
+    libraryDependencies += "com.github.seratch" %% "awscala" % "0.8.+"
   )
 
 mergeStrategy in assembly := { // c

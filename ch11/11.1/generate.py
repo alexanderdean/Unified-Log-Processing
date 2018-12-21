@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import random, datetime, json, copy, time, sys
-from boto import kinesis
+import random, datetime, json, copy, time, sys, boto3
 
 class Jsonable:
   def to_json(self):
@@ -43,7 +42,7 @@ class Customer(Jsonable):
     self.id = id
     self.isVip = is_vip
 
-class Event(object, Jsonable):
+class Event(Jsonable):
   def __init__(self, event, timestamp):
     self.event = event
     self.timestamp = timestamp.isoformat() + "Z"
@@ -129,7 +128,7 @@ PACKAGES = [
   Package("79fee326-aaeb-4cc6-aa4f-f2f98f443271")
 ]
 
-clock = Clock(datetime.datetime(2015, 1, 1))
+clock = Clock(datetime.datetime(2018, 1, 1))
 
 def write_event(conn, stream_name, clock_direction):
   global clock
@@ -150,12 +149,12 @@ def write_event(conn, stream_name, clock_direction):
     DriverDeliversPackage(timestamp, driver, package, customer, location)
     ])
 
-  conn.put_record(stream_name, event.to_json(), str(random.random()))
+  conn.put_record(StreamName=stream_name, Data=event.to_json(), PartitionKey=str(random.random()))
   return (event.__class__.__name__, timestamp)
 
 if __name__ == '__main__':
-  conn = kinesis.connect_to_region(region_name="us-east-1",
-    profile_name="ulp")
+  session = boto3.Session(profile_name="ulp")
+  conn = session.client("kinesis", region_name="us-east-1")
 
   if len(sys.argv) >= 2 and sys.argv[1] == "backwards":
     step_direction = -1
@@ -164,5 +163,5 @@ if __name__ == '__main__':
 
   while True:
     event, ts = write_event(conn, "oops-events", step_direction)
-    print "Wrote {} with timestamp {}".format(event, ts)
+    print(f'Wrote {event} with timestamp {ts}')
     time.sleep(1)
