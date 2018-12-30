@@ -7,8 +7,21 @@ bashrc=/home/vagrant/.bashrc
 echo "========================================"
 echo "INSTALLING PERU AND ANSIBLE DEPENDENCIES"
 echo "----------------------------------------"
+sudo add-apt-repository -y ppa:jonathonf/python-3.6
 apt-get update
-apt-get install -y language-pack-en git unzip libyaml-dev python3-pip python-yaml python-paramiko python-jinja2
+sudo apt-get install -y build-essential \
+  libpq-dev \
+  libssl-dev \
+  openssl \
+  libffi-dev \
+  zlib1g-dev \
+  python-apt
+sudo apt-get install -y python3.6 \
+  python3.6-dev
+curl https://bootstrap.pypa.io/get-pip.py | sudo -H python3.6
+sudo pip3 install --upgrade virtualenvwrapper --ignore-installed six
+sudo ln -s /usr/bin/python3.6 /usr/local/bin/python3
+apt-get install -y language-pack-en git unzip libyaml-dev python-yaml python-paramiko python-jinja2
 
 echo "==============="
 echo "INSTALLING PERU"
