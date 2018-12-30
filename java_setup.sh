@@ -35,6 +35,7 @@ function configure_environment_variables {
 function configure_gradle_jdk {
   #printf 'org.gradle.java.home=/usr/lib/jvm/java-8-oracle/jre\n' | \
   #  tee -a ~/.gradle/gradle.properties
+  echo "no op"
 }
 
 function install_jdk {
