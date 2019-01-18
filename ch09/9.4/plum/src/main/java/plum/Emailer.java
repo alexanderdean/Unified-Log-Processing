@@ -7,9 +7,9 @@ import plum.avro.Alert;
 public final class Emailer {
 
   static final String MAILGUN_KEY =
-    "key-bd3c7d427836872bf02eb80b4b6a62fe";                                                  // a
+    "b5ca946169cf5e9e3da913adb5164587-059e099e-b8a64376";                                    // a
   static final String MAILGUN_SANDBOX =
-    "sandbox26321840e2114f06be28daad732d9795.mailgun.org";                                   // b
+    "sandbox64e16a38b40342f4a81a723f09f2ee85.mailgun.org";                                   // b
 
   private static final Configuration configuration = new Configuration()
     .domain(MAILGUN_SANDBOX)
@@ -17,11 +17,12 @@ public final class Emailer {
     .from("Test account", "postmaster@" + MAILGUN_SANDBOX);
 
   public static void send(Alert alert) {                                
-    MailBuilder.using(configuration)
+    Response resp = Mail.using(configuration)
       .to(alert.recipient.email.toString())
       .subject(alert.notification.summary.toString())
       .text(alert.notification.detail.toString())
       .build()
       .send();
+    System.out.println(resp.responseMessage());
   }
 }
