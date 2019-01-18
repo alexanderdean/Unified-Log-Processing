@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import os, datetime, socket, json, uuid, time
-from boto import kinesis
+import os, datetime, socket, json, uuid, time, boto3
 
 def get_filesystem_metrics(path):
   stats = os.statvfs(path)
@@ -51,13 +50,14 @@ def create_event():
 def write_event(conn, stream_name):
   event_id, event_payload = create_event()
   event_json = json.dumps(event_payload)
-  conn.put_record(stream_name, event_json, event_id)
+  conn.put_record(StreamName=stream_name, Data=event_json,
+    PartitionKey=event_id)
   return event_id
 
 if __name__ == '__main__':                                        # a
-  conn = kinesis.connect_to_region(region_name="us-east-1",
-    profile_name="ulp")
+  session = boto3.Session(profile_name="ulp")
+  conn = session.client("kinesis", region_name="eu-west-1")
   while True:                                                     # b
     event_id = write_event(conn, "events")
-    print "Wrote event: {}".format(event_id)
+    print (f'Wrote event: {event_id}')
     time.sleep(10)                                                # c
