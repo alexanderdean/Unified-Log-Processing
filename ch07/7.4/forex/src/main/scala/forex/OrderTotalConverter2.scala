@@ -13,7 +13,7 @@ object OrderTotalConverter2 {
     ValidationNel[String, OrderTotal] = {
 
     OT.parse(rawCurrency, rawAmount).flatMap(total =>              // a
-      ERL.lookup(total.currency).toValidationNel.map(rate =>       // b
+      ERL.lookup(total.currency).toValidationNel.map((rate: Double) => // b
         OT(Currency.Eur, total.amount * rate)))                    // c
   }
 }

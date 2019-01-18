@@ -11,7 +11,7 @@ object AmountValidator {
       Success(raw.toDouble)                                        // b
     } catch {
       case nfe: NumberFormatException =>
-        Failure("Amount must be parseable to Double, not " + raw)  // c
+        Failure("Amount must be parseable to Double and not " + raw)  // c
     }
   }
 }

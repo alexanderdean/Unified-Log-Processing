@@ -13,7 +13,7 @@ object CurrencyValidator2 {
       Success(Currency.withName(rawUpper))                         // c
     } catch {
       case nsee: NoSuchElementException =>
-        Failure("Currency must be USD/EUR/GBP, not " + raw)        // d
+        Failure("Currency must be USD/EUR/GBP and not " + raw)        // d
     }
   }
 }
