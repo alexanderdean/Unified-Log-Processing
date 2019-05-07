@@ -18,15 +18,18 @@ object ShopperAnalysisJob {
     val sparkConf = new SparkConf()
       .setAppName("ShopperAnalysis")
       .setJars(List(SparkContext.jarOfObject(this).get))           // b
-    val sparkContext = new SparkContext(sparkConf)
+    val spark = SparkSession.builder()
+      .config(sparkConf)
+      .getOrCreate()
+    val sparkContext = spark.sparkContext
 
     val file = sparkContext.sequenceFile[Long, BytesWritable](inFile)
     val jsons = file.map {
       case (_, bw) => toJson(bw)
     }
 
-    val sqlContext = new SQLContext(sparkContext)
-    val events = sqlContext.jsonRDD(jsons)
+    val sqlContext = spark.sqlContext
+    val events = sqlContext.read.json(jsons)
 
     val (shopper, item, order) =
       ("subject.shopper", "directObject.item", "directObject.order")
