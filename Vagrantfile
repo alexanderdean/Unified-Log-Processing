@@ -5,8 +5,8 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
 
   # Forward guest ports for YARN
-  config.vm.network "forwarded_port", guest: 8088, host: 8088
-  config.vm.network "forwarded_port", guest: 8042, host: 8042
+  config.vm.network "forwarded_port", guest: 8088, host: 8188
+  config.vm.network "forwarded_port", guest: 8042, host: 8142
 
   config.vm.provider :virtualbox do |vb|
     vb.name = Dir.pwd().split("/")[-1] + "-" + Time.now.to_f.to_i.to_s
