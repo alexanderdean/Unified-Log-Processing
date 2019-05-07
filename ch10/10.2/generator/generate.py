@@ -126,7 +126,7 @@ packages = set([
   (Package("79fee326-aaeb-4cc6-aa4f-f2f98f443271"), CUSTOMERS_LOCS_UNRELIABLE[0]) 
 ])
 
-START_OF_YEAR = datetime.datetime(2015, 1, 1)
+START_OF_YEAR = datetime.datetime(2018, 1, 1)
 
 if __name__ == '__main__':
 
