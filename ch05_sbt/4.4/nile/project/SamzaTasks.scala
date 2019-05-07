@@ -32,9 +32,9 @@ object SamzaTasks {
   private object GetSamzaShellTask {
     val key = TaskKey[File]("getSamzaShell", "Samza: sources the samza-shell artifact", rank = KeyRanks.ATask)
     val setting = key := {
-      val samzaShellFile = (target in Compile).value / s"samza-shell-0.9.1-dist.tgz"
+      val samzaShellFile = (target in Compile).value / s"samza-shell-0.14.0-dist.tgz"
       if (! samzaShellFile.exists)
-        url(s"http://repo1.maven.org/maven2/org/apache/samza/samza-shell/0.9.1/${samzaShellFile.name}") #> samzaShellFile !
+        url(s"http://repo1.maven.org/maven2/org/apache/samza/samza-shell/0.14.0/${samzaShellFile.name}") #> samzaShellFile !
 
       samzaShellFile
     }
