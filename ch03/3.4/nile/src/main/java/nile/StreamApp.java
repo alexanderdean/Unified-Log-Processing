@@ -1,8 +1,8 @@
 package nile;
 
-import java.io.IOException;                                         // a
+import java.io.*;                                         // a
 
-import com.maxmind.geoip.LookupService;
+import com.maxmind.geoip2.DatabaseReader;
 
 public class StreamApp {
 
@@ -15,8 +15,8 @@ public class StreamApp {
     String maxmindFile = args[5];                                   // b
 
     Consumer consumer = new Consumer(servers, groupId, inTopic);
-    LookupService maxmind  = new LookupService(maxmindFile,
-      LookupService.GEOIP_MEMORY_CACHE);                            // c
+    DatabaseReader maxmind = new DatabaseReader
+            .Builder(new File(maxmindFile)).build();                // c
     FullProducer producer = new FullProducer(
       servers, goodTopic, badTopic, maxmind);                       // d
     consumer.run(producer);

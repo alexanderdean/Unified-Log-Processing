@@ -2,22 +2,22 @@ package nile;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import java.net.InetAddress;
 import org.apache.kafka.clients.producer.*;
-
-import com.maxmind.geoip.*;
+import com.maxmind.geoip2.*;
+import com.maxmind.geoip2.model.*;
 
 public class FullProducer implements IProducer {
 
   private final KafkaProducer<String, String> producer;
   private final String goodTopic;
   private final String badTopic;
-  private final LookupService maxmind;
+  private final DatabaseReader maxmind;
 
   protected static final ObjectMapper MAPPER = new ObjectMapper();
 
   public FullProducer(String servers, String goodTopic,
-    String badTopic, LookupService maxmind) {                          // a
+    String badTopic, DatabaseReader maxmind) {                          // a
     this.producer = new KafkaProducer(
       IProducer.createConfig(servers));
     this.goodTopic = goodTopic;
@@ -29,17 +29,17 @@ public class FullProducer implements IProducer {
 
     try {
       JsonNode root = MAPPER.readTree(message);
-      JsonNode ipAddressNode = root.path("shopper").path("ipAddress"); // b
-      if (ipAddressNode.isMissingNode()) {
+      JsonNode ipNode = root.path("shopper").path("ipAddress"); // b
+      if (ipNode.isMissingNode()) {
         IProducer.write(this.producer, this.badTopic,
           "{\"error\": \"shopper.ipAddress missing\"}");               // c
       } else {
-        String ipAddress = ipAddressNode.textValue();
-        Location location = maxmind.getLocation(ipAddress);            // d
+        InetAddress ip = InetAddress.getByName(ipNode.textValue());
+        CityResponse resp = maxmind.city(ip);// d
         ((ObjectNode)root).with("shopper").put(
-          "country", location.countryName);                            // e
+          "country", resp.getCountry().getName());                            // e
         ((ObjectNode)root).with("shopper").put(
-          "city", location.city);                                      // e
+          "city", resp.getCity().getName());                                      // e
         IProducer.write(this.producer, this.goodTopic,
           MAPPER.writeValueAsString(root));                            // f
       }
