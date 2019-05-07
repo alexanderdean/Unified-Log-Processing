@@ -1,0 +1,49 @@
+apply plugin: 'scala'
+
+configurations {                                                   // a
+    provided
+}
+
+sourceSets {                                                       // a
+    main.compileClasspath += configurations.provided
+}
+
+repositories {
+  mavenCentral()
+}
+
+version = '0.1.0'
+
+ScalaCompileOptions.metaClass.daemonServer = true
+ScalaCompileOptions.metaClass.fork = true
+ScalaCompileOptions.metaClass.useAnt = false
+ScalaCompileOptions.metaClass.useCompileDaemon = false
+
+dependencies {
+  runtime "org.scala-lang:scala-compiler:2.12.7"
+  runtime "org.apache.spark:spark-core_2.12:2.4.0"
+  runtime "org.apache.spark:spark-sql_2.12:2.4.0"
+  compile 'org.scala-lang:scala-library:2.12.7'
+  provided 'org.apache.spark:spark-core_2.12:2.4.0'                // b
+  provided 'org.apache.spark:spark-sql_2.12:2.4.0'
+}
+
+jar {
+  dependsOn configurations.runtime
+  from {
+    (configurations.runtime - configurations.provided).collect {   // c
+      it.isDirectory() ? it : zipTree(it)
+    }
+  } {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
+}
+
+task repl(type:JavaExec) {
+  main = "scala.tools.nsc.MainGenericRunner"
+  classpath = sourceSets.main.runtimeClasspath
+  standardInput System.in
+  args '-usejavacp'
+}

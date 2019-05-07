@@ -9,14 +9,22 @@ repositories {
 
 version = '0.1.0'
 
-tasks.withType(ScalaCompile) {                                     // c
-  scalaCompileOptions.useAnt = false
-}
+ScalaCompileOptions.metaClass.daemonServer = true                  // c
+ScalaCompileOptions.metaClass.fork = true
+ScalaCompileOptions.metaClass.useAnt = false
+ScalaCompileOptions.metaClass.useCompileDaemon = false
 
 dependencies {                                                     // d
-  runtime "org.scala-lang:scala-compiler:2.11.4"
-  compile 'org.scala-lang:scala-library:2.11.4'
-  compile 'org.scalaz:scalaz-core_2.11:7.1.0'
-  testCompile 'org.specs2:specs2_2.11:2.4'
-  testCompile 'org.typelevel:scalaz-specs2_2.11:0.3.0'
+  runtime "org.scala-lang:scala-compiler:2.12.7"
+  compile 'org.scala-lang:scala-library:2.12.7'
+  compile 'org.scalaz:scalaz-core_2.12:7.2.27'
+  testCompile 'org.specs2:specs2_2.12:3.8.9'
+  testCompile 'org.typelevel:scalaz-specs2_2.12:0.5.2'
+}
+
+task repl(type:JavaExec) {                                         // d
+  main = "scala.tools.nsc.MainGenericRunner"
+  classpath = sourceSets.main.runtimeClasspath
+  standardInput System.in
+  args '-usejavacp'
 }
