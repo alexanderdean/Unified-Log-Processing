@@ -35,7 +35,7 @@ DOWNLOAD_CACHE_DIR=$HOME/.samza/download
 COMMAND=$1
 SYSTEM=$2
 
-DOWNLOAD_KAFKA=http://www.us.apache.org/dist/kafka/2.0.0/kafka_2.12-2.0.0.tgz
+DOWNLOAD_KAFKA=http://archive.apache.org/dist/kafka/2.0.0/kafka_2.12-2.0.0.tgz
 DOWNLOAD_YARN=https://archive.apache.org/dist/hadoop/common/hadoop-2.6.5/hadoop-2.6.5.tar.gz
 DOWNLOAD_ZOOKEEPER=http://archive.apache.org/dist/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 
@@ -87,7 +87,7 @@ install_samza() {
   else
     mkdir -p $DOWNLOAD_CACHE_DIR
     pushd $DOWNLOAD_CACHE_DIR
-    git clone git://git.apache.org/samza.git
+    git clone git@github.com:apache/samza.git
     cd samza
   fi
   ./gradlew -PscalaVersion=2.12 clean publishToMavenLocal
